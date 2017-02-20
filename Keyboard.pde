@@ -22,7 +22,7 @@
   class Keyboard {
     // Orientado vertical
     boolean show;
-    RectButton [] bt = new RectButton [114];
+    RectButton [] bt = new RectButton [115];
     float w = float (width);
     float h = float (height);
     float he = 3*h/5;
@@ -85,35 +85,34 @@
       bt [102] = new RectButton (int (2*w/(11*13)), int (he + 7*hi/(6*11) + 4*hi/6), int (2*w/(11*13) + 19*w/143), int (he + 7*hi/(6*11) + 5*hi/6), "ABC", 60);
       bt [103] = new RectButton (int (2*w/(11*13)), int (he + 6*hi/(6*11) + 3*hi/6), int (2*w/(11*13) + 19*w/143), int (he + 6*hi/(6*11) + 4*hi/6), "", 50);
       // shift mayusc. (shift = 2)
-      // Si le quiero poner una mayúscula
-      // de un solo uso.
-      // bt [104?] = new RectButton (int (2*w/(11*13)), int (he + 6*hi/(6*11) + 3*hi/6), int (2*w/(11*13) + 19*w/143), int (he + 6*hi/(6*11) + 4*hi/6), "Shift", 50);
-      // Desplazaría las tildes en un índice
-      // para meterlo.
+      bt [104] = new RectButton (int (2*w/(11*13)), int (he + 6*hi/(6*11) + 3*hi/6), int (2*w/(11*13) + 19*w/143), int (he + 6*hi/(6*11) + 4*hi/6), "Shift", 50);
+      bt [104].SetColorBackground (150);
       // Tildes
-      bt [104] = new RectButton (int (2*w/(11*13)), int (he + 5*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11), int (he + 5*hi/(6*11) + 3*hi/6 - 10*hi/(6*11)), "á", 80);
-      bt [105] = new RectButton (int (2*w/(11*13)+2*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11+2*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), "é", 80);
-      bt [106] = new RectButton (int (2*w/(11*13)+7*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11+7*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), "í", 80);
-      bt [107] = new RectButton (int (2*w/(11*13)+8*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11+8*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), "ó", 80);
-      bt [108] = new RectButton (int (2*w/(11*13)+6*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11+6*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), "ú", 80);
-      bt [109] = new RectButton (int (2*w/(11*13)), int (he + 5*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11), int (he + 5*hi/(6*11) + 3*hi/6 - 10*hi/(6*11)), "Á", 80);
-      bt [110] = new RectButton (int (2*w/(11*13)+2*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11+2*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), "É", 80);
-      bt [111] = new RectButton (int (2*w/(11*13)+7*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11+7*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), "Í", 80);
-      bt [112] = new RectButton (int (2*w/(11*13)+8*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11+8*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), "Ó", 80);
-      bt [113] = new RectButton (int (2*w/(11*13)+6*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11+6*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), "Ú", 80);
+      bt [105] = new RectButton (int (2*w/(11*13)), int (he + 5*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11), int (he + 5*hi/(6*11) + 3*hi/6 - 10*hi/(6*11)), "á", 80);
+      bt [106] = new RectButton (int (2*w/(11*13)+2*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11+2*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), "é", 80);
+      bt [107] = new RectButton (int (2*w/(11*13)+7*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11+7*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), "í", 80);
+      bt [108] = new RectButton (int (2*w/(11*13)+8*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11+8*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), "ó", 80);
+      bt [109] = new RectButton (int (2*w/(11*13)+6*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11+6*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), "ú", 80);
+      bt [110] = new RectButton (int (2*w/(11*13)), int (he + 5*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11), int (he + 5*hi/(6*11) + 3*hi/6 - 10*hi/(6*11)), "Á", 80);
+      bt [111] = new RectButton (int (2*w/(11*13)+2*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11+2*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), "É", 80);
+      bt [112] = new RectButton (int (2*w/(11*13)+7*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11+7*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), "Í", 80);
+      bt [113] = new RectButton (int (2*w/(11*13)+8*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11+8*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), "Ó", 80);
+      bt [114] = new RectButton (int (2*w/(11*13)+6*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11+6*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), "Ú", 80);
     }
     
     void display () {
       if (show) {
-        background (0);
-        for (int i = 0; i < 114; i++) bt [i].display ();
+        fill (0);
+        noStroke ();
+        rect (0,0.59*height,width, 0.42*height);
+        for (int i = 0; i < 115; i++) bt [i].display ();
         for (int i = 0; i < 10; i++) bt[i].SetHide(false);
         for (int i = 37; i < 40; i++) bt [i].SetHide (false);
         if (shift == 0 && !sym) {
           for (int i = 10; i < 37; i++) bt [i].SetHide (false);
           for (int i = 40; i < 44; i++) bt [i].SetHide (false);
           for (int i = 44; i < 73; i++) bt [i].SetHide (true);
-          for (int i = 73; i < 104; i++) bt [i].SetHide (true);
+          for (int i = 73; i < 105; i++) bt [i].SetHide (true);
         } else if (shift == 1 && !sym) {
           for (int i = 10; i < 37; i++) bt [i].SetHide (true);
           bt [40].SetHide (false);
@@ -121,17 +120,27 @@
           bt [42].SetHide (true);
           bt [43].SetHide (true);
           for (int i = 44; i < 73; i++) bt [i].SetHide (false);
+          for (int i = 73; i < 105; i++) bt [i].SetHide (true);
+        } else if (shift == 2 && !sym) {
+          for (int i = 10; i < 37; i++) bt [i].SetHide (true);
+          bt [40].SetHide (true);
+          bt [41].SetHide (false);
+          bt [42].SetHide (true);
+          bt [43].SetHide (true);
+          for (int i = 44; i < 73; i++) bt [i].SetHide (false);
           for (int i = 73; i < 104; i++) bt [i].SetHide (true);
+          bt [104].SetHide (false);
         } else if (sym) {
           for (int i = 10; i < 37; i++) bt [i].SetHide (true);
           for (int i = 40; i < 73; i++) bt [i].SetHide (true);
           for (int i = 73; i < 104; i++) bt [i].SetHide (false);
+          bt [104].SetHide (true);
         } 
         for (int i = 0; i < 10; i++) {
           if (til [i]) {
-            bt [104+i].SetHide (false);
+            bt [105+i].SetHide (false);
           } else {
-            bt [104+i].SetHide (true);
+            bt [105+i].SetHide (true);
           }
         }
         line (100, 3*height/5, width-100, 3*height/5);
@@ -139,21 +148,21 @@
       // Condicionales:
       if (show) {
         // Capas para los botones de tildes.
-        for (int i = 104; i < 114; i++) {
+        for (int i = 105; i < 115; i++) {
           if (bt [i].pressed()) {
-            if (i == 104) bt [10].SetActive (false);
-            if (i == 105 || i == 110) bt [3].SetActive (false);
-            if (i == 106 || i == 111) bt [8].SetActive (false);
-            if (i == 107 || i == 112) bt [9].SetActive (false);
-            if (i == 108 || i == 113) bt [7].SetActive (false);
-            if (i == 109) bt [44].SetActive (false);
+            if (i == 105) bt [10].SetActive (false);
+            if (i == 106 || i == 111) bt [3].SetActive (false);
+            if (i == 107 || i == 112) bt [8].SetActive (false);
+            if (i == 108 || i == 113) bt [9].SetActive (false);
+            if (i == 109 || i == 114) bt [7].SetActive (false);
+            if (i == 110) bt [44].SetActive (false);
           }
         }
-        for (int i = 0; i < 104; i++) {
+        for (int i = 0; i < 105; i++) {
           if (bt [i].onFirstFramePressed  ()) {
             time = millis ();
             // Desactiva los cuadros de tildes.
-            if (i < 104) for (int j = 0; j < 10; j++) {
+            if (i < 105) for (int j = 0; j < 10; j++) {
               if (til [j]) til [j] = false;
             }
           }
@@ -179,8 +188,11 @@
           if (shift == 0) {
             shift = 1;
           } else {
-            shift = 0;
+            shift = 2;
           }
+        }
+        if (bt [104].on ()) {
+          shift = 0;
         }
         if (bt [41].on ()) {
           sym = true;
@@ -193,7 +205,10 @@
           if (bt [i].on ()) sal = sal + str (i);
         for (int i = 0; i < 27; i++) {
           if (bt [10+i].on ()) sal = sal + qwe [i];
-          if (bt [44+i].on ()) sal = sal + QWE [i];
+          if (bt [44+i].on ()) {
+            sal = sal + QWE [i];
+            if (shift == 1) shift = 0;
+          }
           if (bt [73+i].on ()) sal = sal + csym [i];
         }
         if (bt [37].on ()) sal = sal + ' ';
@@ -212,12 +227,18 @@
         }
         if (bt [42].on ()) sal = sal + ',';
         if (bt [43].on ()) sal = sal + '.';
-        if (bt [71].on ()) sal = sal + ';';
-        if (bt [72].on ()) sal = sal + ':';
+        if (bt [71].on ()) {
+          sal = sal + ';';
+          if (shift == 1) shift = 0;
+        }
+        if (bt [72].on ()) {
+          sal = sal + ':';
+          if (shift == 1) shift = 0;
+        }
         if (bt [100].on ()) sal = sal + csym [27];
         if (bt [101].on ()) sal = sal + csym [28];
         for (int i = 0; i < 10; i++)
-          if (bt [104+i].on ()) sal = sal + ctil [i];
+          if (bt [105+i].on ()) sal = sal + ctil [i];
       }
       for (int i = 0; i < 10; i++) til [i] = false;
     }

@@ -11,7 +11,8 @@
     boolean ffoseg; // firstFrameOn seg.
     color cFillPressed = 100;
     boolean hide;
-    boolean isDisplaying;
+    color cBackground = 0;
+    color cFillOn = 0;
   
     RectButton (int tx1, int ty1, int tx2, int ty2, String ttitle) {
       x1 = tx1;
@@ -37,9 +38,11 @@
     void display () {
       if (!hide) {
         stroke (180);
-        fill(0);
+        fill(cBackground);
         if (pressed ()) {
           fill (cFillPressed);
+        } else if (on ()) {
+          fill (cFillOn);
         }
         rect (x1, y1, x2-x1, y2-y1);
         textAlign (CENTER);
@@ -120,6 +123,10 @@
       active = sActive;
     }
     
+    public void SetColorBackground (color tcolor) {
+      cBackground = tcolor;
+    }
+    
     public void SetFillPressed (color c) {
       cFillPressed = c;
     }
@@ -136,6 +143,7 @@
     
   }
   
+  // Pendiente.
   class CheckBox  { // No hacer muy grande.
     int x1;
     int x2;
