@@ -40,6 +40,7 @@
     char [] ctil = {'á','é','í','ó','ú','Á','É','Í','Ó','Ú'};
     String sal = "";
     boolean intro;
+    boolean hideable;
     
     Keyboard () {
       // 1a fila. Números.
@@ -239,12 +240,19 @@
         if (bt [101].on ()) sal = sal + csym [28];
         for (int i = 0; i < 10; i++)
           if (bt [105+i].on ()) sal = sal + ctil [i];
+        if (hideable) {
+          if (mouseY < 0.59*height) show = false;
+        }
       }
       for (int i = 0; i < 10; i++) til [i] = false;
     }
     
     public void SetHide (boolean sbol) {
       show = !sbol;
+    }
+    
+    public void SetHideable (boolean sbol) {
+      hideable = sbol;
     }
     
     public boolean Intro () {
