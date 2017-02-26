@@ -4,11 +4,13 @@
    int x2;
    int y1;
    int y2;
-   String text;
+   String text = "";
    int ts; // Tamaño de letra
    boolean active = true;
    boolean ffseg; // firstFramePr seg.
    boolean ffoseg; // firstFrameOn seg.
+   int mspseg; // onMillisSincePressed seg.
+   int msoseg; // onMillisSinceOn seg.
    color cBackPressed = 100;
    boolean hide;
    color cBackground = 0;
@@ -19,9 +21,9 @@
        stroke (180);
        fill(cBackground);
        if (pressed ()) {
-         fill (cFillPressed);
+         fill (cBackPressed);
        } else if (on ()) {
-         fill (cFillOn);
+         fill (cBackOn);
        }
        rect (x1, y1, x2-x1, y2-y1);
        if (!text.equals ("")) {
@@ -110,10 +112,9 @@
    
    public boolean onMillisSinceOn (int tmillis) {
      boolean r = false;
-     int mi = 0;
-     if (onFirstFrameOn()) mi = millis ();
+     if (onFirstFrameOn()) msoseg = millis ();
      if (on ()) {
-       if (millis () - mi >= tmillis) r = true;
+       if (millis () - msoseg >= tmillis) r = true;
      } else {
        r = false;
      }
@@ -122,10 +123,9 @@
    
    public boolean onMillisSincePressed (int tmillis) {
      boolean r = false;
-     int mi = 0;
-     if (onFirstFramePressed()) mi = millis ();
+     if (onFirstFramePressed()) mspseg = millis ();
      if (pressed ()) {
-       if (millis () - mi >= tmillis) r = true;
+       if (millis () - mspseg >= tmillis) r = true;
      } else {
        r = false;
      }

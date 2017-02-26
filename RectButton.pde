@@ -1,25 +1,14 @@
 
-  class RectButton {
-    int x1;
-    int x2;
-    int y1;
-    int y2;
-    String title;
-    int ts; // Tamaño de letra
-    boolean active = true;
-    boolean ffseg; // firstFramePr seg.
-    boolean ffoseg; // firstFrameOn seg.
-    color cFillPressed = 100;
-    boolean hide;
-    color cBackground = 0;
-    color cFillOn = 0;
+  class RectButton extends RectClickable {
+    int spmmseg; // sincePressedMillisMod seg.
+    int sommseg; // sinceOnMillisMod seg.
   
     RectButton (int tx1, int ty1, int tx2, int ty2, String ttitle) {
       x1 = tx1;
       x2 = tx2;
       y1 = ty1;
       y2 = ty2;
-      title = ttitle;
+      text = ttitle;
       ts = 30;
     }
   
@@ -28,117 +17,40 @@
       x2 = tx2;
       y1 = ty1;
       y2 = ty2;
-      title = ttitle;
+      text = ttitle;
       ts = tts;
     }
-  
-    // Puedo ponerle otra construcción para cambiar el color
-    // de fondo o cosas así. En el futuro si es necesario.
-  
-    void display () {
-      if (!hide) {
-        stroke (180);
-        fill(cBackground);
-        if (pressed ()) {
-          fill (cFillPressed);
-        } else if (on ()) {
-          fill (cFillOn);
-        }
-        rect (x1, y1, x2-x1, y2-y1);
-        textAlign (CENTER);
-        textSize (ts);
-        fill (200);
-        if (ts >= 15) {
-          text (title, (x1+x2)/2, (y1+y2)/2+10+ts/5);
-        } else {
-          text (title, (x1+x2)/2, (y1+y2)/2+ts/3);
-        }
-        textAlign (LEFT);
-      }
-    }
-  
-    boolean pressed () {
-      if (active) {
-        if (x1 < mouseX && mouseX < x2 && y1 < mouseY && mouseY < y2 && mousePressed) {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
+    
+    public void display () {
+      drawBasics ();
     }
     
-    boolean on () {
-      if (active) {
-        if (x1 < mouseX && mouseX < x2 && y1 < mouseY && mouseY < y2) {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
-    }
-    
-    boolean onFirstFramePressed () {
+    public boolean sinceOnMillisMod (int tmod) {
       boolean r = false;
-      if (active) {
-        if (pressed ()) {
-          if (!ffseg) {
-            ffseg = true;
-            r = true;
-          }
-        } else {
-          ffseg = false;
+      if (onFirstFrameOn()) sommseg = millis ();
+      if (on ()) {
+        if ((millis () - sommseg) >= tmod) {
+          sommseg = millis ();
+          r = true;
         }
+      } else {
+        r = false;
       }
       return r;
     }
     
-    boolean onFirstFrameOn () {
+    public boolean sincePressedMillisMod (int tmod) {
       boolean r = false;
-      if (active) {
-        if (on ()) {
-          if (!ffoseg) {
-            ffoseg = true;
-            r = true;
-          }
-        } else {
-          ffoseg = false;
+      if (onFirstFramePressed()) spmmseg = millis ();
+      if (pressed ()) {
+        if ((millis () - spmmseg) >= tmod) {
+          spmmseg = millis ();
+          r = true;
         }
+      } else {
+        r = false;
       }
       return r;
-    }
-    
-    boolean isActive () {
-      return active;
-    }
-    
-    boolean isHide () {
-      return hide;
-    }
-    
-    public void SetActive (boolean sActive) {
-      active = sActive;
-    }
-    
-    public void SetColorBackground (color tcolor) {
-      cBackground = tcolor;
-    }
-    
-    public void SetFillPressed (color c) {
-      cFillPressed = c;
-    }
-    
-    public void SetHide (boolean sHide) {
-      if (sHide) {
-        hide = true;
-        active = false;
-      } else {
-        hide = false;
-        active = true;
-      }
     }
     
   }

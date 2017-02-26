@@ -1,23 +1,3 @@
- // Hago una función TextDisplay o algo así
- // que reciba las coordenadas de un
- // cuadro de texto y allí va introduciendo
- // la string de salida.
- 
- // Esa va en una clase a parte, TextBox.
- // Cuando se selecciona ese objeto,
- // aparece el teclado. Pilla la string
- // de texto de la caja y la modifica.
- 
- // En el teclado me falta, entonces,
- // una función Set/GetString. Y la función
- // pulsar intro activa un booleano,
- // como en firstframePressed de los
- // RectButton, que depende de lo que
- // quiera hacer.
- 
- // En la clase TextBox, función
- // SetText, GetText. Cuando On (), 
- // se activa el teclado que la edita.
 
   class Keyboard {
     // Orientado vertical
@@ -27,7 +7,7 @@
     float h = float (height);
     float he = 3*h/5;
     float hi = 2*h/5;
-    int i1;
+    int i1; // int de apoyo.
     int time;
     byte shift;
     boolean sym;
@@ -88,6 +68,7 @@
       // shift mayusc. (shift = 2)
       bt [104] = new RectButton (int (2*w/(11*13)), int (he + 6*hi/(6*11) + 3*hi/6), int (2*w/(11*13) + 19*w/143), int (he + 6*hi/(6*11) + 4*hi/6), "Shift", 50);
       bt [104].SetColorBackground (150);
+      bt [104].SetColorBackOn (150);
       // Tildes
       bt [105] = new RectButton (int (2*w/(11*13)), int (he + 5*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11), int (he + 5*hi/(6*11) + 3*hi/6 - 10*hi/(6*11)), "á", 80);
       bt [106] = new RectButton (int (2*w/(11*13)+2*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11+2*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), "é", 80);
@@ -101,7 +82,7 @@
       bt [114] = new RectButton (int (2*w/(11*13)+6*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11+6*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), "Ú", 80);
     }
     
-    void display () {
+    public void display () {
       if (show) {
         fill (0);
         noStroke ();
@@ -177,12 +158,44 @@
               }
             }
           }
+          if (bt [39].onMillisSincePressed (500)) {
+            if (bt [39].sincePressedMillisMod  (80)) pressDelete ();
+          }
         }
         
       }
     }
     
-    void released () {
+    public String GetString () {
+      return sal;
+    }
+    
+    public boolean Intro () {
+      return intro;
+    }
+    
+    public boolean isHide () {
+      return !show;
+    }
+    
+    public boolean isHideable () {
+      return hideable;
+    }
+    
+    public void pressDelete () {
+      int l = 0;
+      if (sal != null) l = sal.length ();
+      if (l == 1) {
+        sal = "";
+      } else if (l > 1) {
+        char [] wc = new char [l-1];
+        for (int j = 0; j < l-1; j++) wc [j] = sal.charAt (j);
+        sal = str (wc [0]);
+        for (int j = 1; j < l-1; j++) sal = sal + wc [j];
+      }
+    }
+    
+    public void released () {
       if (show) {
         intro = false;
         if (bt [40].on ()) {
@@ -214,18 +227,7 @@
         }
         if (bt [37].on ()) sal = sal + ' ';
         if (bt [38].on ()) intro = true; // Intro.
-        if (bt [39].on ()) { // Borrar
-          int l = 0;
-          if (sal != null) l = sal.length ();
-          if (l == 1) {
-            sal = "";
-          } else if (l > 1) {
-            char [] wc = new char [l-1];
-            for (int j = 0; j < l-1; j++) wc [j] = sal.charAt (j);
-            sal = str (wc [0]);
-            for (int j = 1; j < l-1; j++) sal = sal + wc [j];
-          }
-        }
+        if (bt [39].on ()) pressDelete ();
         if (bt [42].on ()) sal = sal + ',';
         if (bt [43].on ()) sal = sal + '.';
         if (bt [71].on ()) {
@@ -253,14 +255,6 @@
     
     public void SetHideable (boolean sbol) {
       hideable = sbol;
-    }
-    
-    public boolean Intro () {
-      return intro;
-    }
-    
-    public String GetString () {
-      return sal;
     }
     
     public void SetString (String stri) {
