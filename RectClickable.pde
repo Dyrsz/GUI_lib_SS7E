@@ -1,39 +1,54 @@
 
- class RectClickable {
-   int x1;
-   int x2;
-   int y1;
-   int y2;
-   String text = "";
-   int ts; // Tamaño de letra
-   boolean active = true;
-   boolean ffseg; // firstFramePr seg.
-   boolean ffoseg; // firstFrameOn seg.
-   int mspseg; // onMillisSincePressed seg.
-   int msoseg; // onMillisSinceOn seg.
-   color cBackPressed = 100;
-   boolean hide;
-   color cBackground = 0;
-   color cBackOn = 0;
+ public class RectClickable {
+   // RelativePosition
+   
+   private int x1, x2, y1, y2, textSize;
+   private String text = "";
+   private boolean active = true;
+   private boolean hide, _firstFramePressedSeg, _firstFrameOnSeg;
+   private int _onMillisSincePressedSeg, _onMillisSinceOnSeg;
+   private color colorBackPressed = 100;
+   private color colorBackground = 0;
+   private color colorBackOn = 0;
+  
+   /* I think it is not necessary.
+   RectClickable (int tx1, int ty1, int tx2, int ty2, String ttitle) {
+      x1 = tx1;
+      x2 = tx2;
+      y1 = ty1;
+      y2 = ty2;
+      text = ttitle;
+      ts = 30;
+    }
+  
+   RectClickable (int tx1, int ty1, int tx2, int ty2, String ttitle, int tts) {
+     x1 = tx1;
+     x2 = tx2;
+     y1 = ty1;
+     y2 = ty2;
+     text = ttitle;
+     ts = tts;
+   }
+   */
   
    public void drawBasics () {
      if (!hide) {
        stroke (180);
-       fill(cBackground);
+       fill(colorBackground);
        if (pressed ()) {
-         fill (cBackPressed);
+         fill (colorBackPressed);
        } else if (on ()) {
-         fill (cBackOn);
+         fill (colorBackOn);
        }
        rect (x1, y1, x2-x1, y2-y1);
        if (!text.equals ("")) {
          textAlign (CENTER);
-         textSize (ts);
+         textSize (textSize);
          fill (200);
-         if (ts >= 15) {
-           text (text, (x1+x2)/2, (y1+y2)/2+10+ts/5);
+         if (textSize >= 15) {
+           text (text, (x1+x2)/2, (y1+y2)/2+10+textSize/5);
          } else {
-           text (text, (x1+x2)/2, (y1+y2)/2+ts/3);
+           text (text, (x1+x2)/2, (y1+y2)/2+textSize/3);
          }
          textAlign (LEFT);
        }
@@ -41,15 +56,20 @@
    }
    
    public color GetColorBackground () {
-     return cBackground;
+     return colorBackground;
    }
    
    public color GetColorBackPressed () {
-     return cBackPressed;
+     return colorBackPressed;
    }
    
    public color GetColorBackOn () {
-     return cBackOn;
+     return colorBackOn;
+   }
+   
+   public int [] GetPosition () {
+     int [] r = {x1, x2, y1, y2};
+     return r;
    }
    
    public String GetText () {
@@ -57,14 +77,14 @@
    }
    
    public int GetTextSize () {
-     return ts;
+     return textSize;
    }
    
-   public boolean isActive () {
+   public boolean IsActive () {
      return active;
    }
     
-   public boolean isHide () {
+   public boolean IsHide () {
      return hide;
    }
    
@@ -84,12 +104,12 @@
      boolean r = false;
      if (active) {
        if (on ()) {
-         if (!ffoseg) {
-           ffoseg = true;
+         if (!_firstFrameOnSeg) {
+           _firstFrameOnSeg = true;
            r = true;
          }
        } else {
-         ffoseg = false;
+         _firstFrameOnSeg = false;
        }
      }
      return r;
@@ -99,12 +119,12 @@
      boolean r = false;
      if (active) {
        if (pressed ()) {
-         if (!ffseg) {
-           ffseg = true;
+         if (!_firstFramePressedSeg) {
+           _firstFramePressedSeg = true;
            r = true;
          }
        } else {
-         ffseg = false;
+         _firstFramePressedSeg = false;
        }
      }
      return r;
@@ -112,9 +132,9 @@
    
    public boolean onMillisSinceOn (int tmillis) {
      boolean r = false;
-     if (onFirstFrameOn()) msoseg = millis ();
+     if (onFirstFrameOn()) _onMillisSinceOnSeg = millis ();
      if (on ()) {
-       if (millis () - msoseg >= tmillis) r = true;
+       if (millis () - _onMillisSinceOnSeg >= tmillis) r = true;
      } else {
        r = false;
      }
@@ -123,9 +143,9 @@
    
    public boolean onMillisSincePressed (int tmillis) {
      boolean r = false;
-     if (onFirstFramePressed()) mspseg = millis ();
+     if (onFirstFramePressed()) _onMillisSincePressedSeg = millis ();
      if (pressed ()) {
-       if (millis () - mspseg >= tmillis) r = true;
+       if (millis () - _onMillisSincePressedSeg >= tmillis) r = true;
      } else {
        r = false;
      }
@@ -149,15 +169,15 @@
    }
     
    public void SetColorBackground (color tcolor) {
-     cBackground = tcolor;
+     colorBackground = tcolor;
    }
     
    public void SetColorBackPressed (color tcolor) {
-     cBackPressed = tcolor;
+     colorBackPressed = tcolor;
    }
    
    public void SetColorBackOn (color tcolor) {
-     cBackOn = tcolor;
+     colorBackOn = tcolor;
    }
    
    public void SetHide (boolean sHide) {
@@ -170,12 +190,19 @@
      }
    }
    
+   public void SetPosition (int tx1, int ty1, int tx2, int ty2) {
+     x1 = tx1;
+     x2 = tx2;
+     y1 = ty1;
+     y2 = ty2;
+   }
+   
    public void SetText (String tt) {
      text = tt;
    }
    
-   public void SetTextSize (int tts) {
-     ts = tts;
+   public void SetTextSize (int ts) {
+     textSize = ts;
    }
    
  }

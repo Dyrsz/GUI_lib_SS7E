@@ -1,24 +1,18 @@
 
-  class RectButton extends RectClickable {
-    int spmmseg; // sincePressedMillisMod seg.
-    int sommseg; // sinceOnMillisMod seg.
-  
-    RectButton (int tx1, int ty1, int tx2, int ty2, String ttitle) {
-      x1 = tx1;
-      x2 = tx2;
-      y1 = ty1;
-      y2 = ty2;
-      text = ttitle;
-      ts = 30;
+ public class RectButton extends RectClickable {
+    
+    private int _sincePressedMillisModSeg, _sinceOnMillisModSeg;
+    
+    public RectButton (int tx1, int ty1, int tx2, int ty2, String ttitle) {
+      SetPosition (tx1, ty1, tx2, ty2);
+      SetText (ttitle);
+      SetTextSize (30);
     }
   
-    RectButton (int tx1, int ty1, int tx2, int ty2, String ttitle, int tts) {
-      x1 = tx1;
-      x2 = tx2;
-      y1 = ty1;
-      y2 = ty2;
-      text = ttitle;
-      ts = tts;
+    public RectButton (int tx1, int ty1, int tx2, int ty2, String ttitle, int tts) {
+      SetPosition (tx1, ty1, tx2, ty2);
+      SetText (ttitle);
+      SetTextSize (tts);
     }
     
     public void display () {
@@ -27,10 +21,10 @@
     
     public boolean sinceOnMillisMod (int tmod) {
       boolean r = false;
-      if (onFirstFrameOn()) sommseg = millis ();
+      if (onFirstFrameOn()) _sinceOnMillisModSeg = millis ();
       if (on ()) {
-        if ((millis () - sommseg) >= tmod) {
-          sommseg = millis ();
+        if ((millis () - _sinceOnMillisModSeg) >= tmod) {
+          _sinceOnMillisModSeg = millis ();
           r = true;
         }
       } else {
@@ -41,10 +35,10 @@
     
     public boolean sincePressedMillisMod (int tmod) {
       boolean r = false;
-      if (onFirstFramePressed()) spmmseg = millis ();
+      if (onFirstFramePressed()) _sincePressedMillisModSeg = millis ();
       if (pressed ()) {
-        if ((millis () - spmmseg) >= tmod) {
-          spmmseg = millis ();
+        if ((millis () - _sincePressedMillisModSeg) >= tmod) {
+          _sincePressedMillisModSeg = millis ();
           r = true;
         }
       } else {
@@ -56,6 +50,7 @@
   }
   
   // Pendiente.
+  /*
   class CheckBox  { // No hacer muy grande.
     int x1;
     int x2;
@@ -97,5 +92,6 @@
       }
     }
   }
+  */
   
   
