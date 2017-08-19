@@ -3,6 +3,8 @@
     
     private int _sincePressedMillisModSeg, _sinceOnMillisModSeg;
     
+    // textsize is in the constructor because I have to adjust
+    // it according to the button size. When I do that, I will remove it.
     public RectButton (int tx1, int ty1, int tx2, int ty2, String ttitle) {
       SetPosition (tx1, ty1, tx2, ty2);
       SetText (ttitle);
@@ -13,6 +15,26 @@
       SetPosition (tx1, ty1, tx2, ty2);
       SetText (ttitle);
       SetTextSize (tts);
+    }
+    
+    public RectButton (int [] tposition, String ttitle) {
+      if (tposition.length == 4) {
+        SetPosition (tposition [0], tposition [1], tposition [2], tposition [3]);
+        SetText (ttitle);
+        SetTextSize (30);
+      } else {
+        println ("Bad call on RectButton (int [], String). Bad array input.");
+      }
+    }
+  
+    public RectButton (int [] tposition, String ttitle, int tts) {
+      if (tposition.length == 4) {
+        SetPosition (tposition [0], tposition [1], tposition [2], tposition [3]);
+        SetText (ttitle);
+        SetTextSize (30);
+      } else {
+        println ("Bad call on RectButton (int [], String, int). Bad array input.");
+      }
     }
     
     public void display () {

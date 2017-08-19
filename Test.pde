@@ -8,10 +8,14 @@
    - Booleano para el teclado sobre los
    saltos de línea = Shift+Intro.
    
+   Esto es una prueba de escritura con el teclado
+   Byone. Mola muchisimo. Aunque parece que no
+   puedo escribir las tildes bien aquí.
    Bugs:
    
  */
  
+ PositionGuide pg;
  RectButton[] but = new RectButton [10];
  // CheckBox ch;
  // Keyboard kb;
@@ -22,8 +26,11 @@ void setup () {
   orientation (PORTRAIT); // LANDSCAPE si no.
   // kb = new Keyboard ();
   // tb = new TextBox (kb, 300, 700, 600, 1000, 60);
-  Relative.onSetup (this);
-  for (int i = 0; i<10; i++) but [i] = Relative.RectButton (0.3, i*0.08, 0.6, i*0.08+0.07, str(i));
+  pg = new PositionGuide ("Column", "Relative", "UniformDistribution");
+  pg.SetOffset (0.35, 0.35, 0.2, 0.2);
+  pg.Generate ();
+  //Relative.onSetup (this);
+  for (int i = 0; i<10; i++) but [i] = RectButton (pg.GetColumnCoord (i), str(i));
 }
 
 void draw () {

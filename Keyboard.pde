@@ -3,11 +3,11 @@
     // Vertical orientation
     private boolean show;
     private RectButton [] buttons = new RectButton [115];
-    float w = float (width);
-    float h = float (height);
-    float he = 3*h/5;
-    float hi = 2*h/5;
-    int i1; // int de apoyo.
+    float height_exterior = 3/5;
+    float height_interior = 2/5;
+    
+    
+    int i1; // auxiliar int.
     int time;
     byte shift;
     boolean sym;
@@ -27,20 +27,20 @@
       for (float i = 0; i < 10; i++) {
         i1 = int (i);
         if (i1 == 0) {
-          buttons [0] = new RectButton (int (2*w/(11*13)+9*(w/11+w/(11*13))), int (he + 2*hi/(6*11)), int (2*w/(11*13)+w/11+9*(w/11+w/(11*13))), int (he + 2*hi/(6*11) + hi/6), "0", 80);
+          buttons [0] = new RectButton (int (2*w/(11*13)+9*(w/11+w/(11*13))), int (height_exterior + 2*hi/(6*11)), int (2*w/(11*13)+w/11+9*(w/11+w/(11*13))), int (height_exterior + 2*hi/(6*11) + hi/6), "0", 80);
         } else {
-          buttons [i1] = new RectButton (int (2*w/(11*13)+(i-1)*(w/11+w/(11*13))), int (he + 2*hi/(6*11)), int (2*w/(11*13)+w/11+(i-1)*(w/11+w/(11*13))), int (he + 2*hi/(6*11) + hi/6), str (i1), 80);
+          buttons [i1] = new RectButton (int (2*w/(11*13)+(i-1)*(w/11+w/(11*13))), int (height_exterior + 2*hi/(6*11)), int (2*w/(11*13)+w/11+(i-1)*(w/11+w/(11*13))), int (height_exterior + 2*hi/(6*11) + hi/6), str (i1), 80);
         }
       }
       // Is not like the Android Keyboard.
       for (float i = 0; i < 10; i++) {
         i1 = int (i);
-        buttons [i1+10] = new RectButton (int (2*w/(11*13)+i*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + hi/6), int (2*w/(11*13)+w/11+i*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + 2*hi/6), str (qwe [i1]), 80);
-        buttons [i1+20] = new RectButton (int (2*w/(11*13)+i*(w/11+w/(11*13))), int (he + 5*hi/(6*11) + 2*hi/6), int (2*w/(11*13)+w/11+i*(w/11+w/(11*13))), int (he + 5*hi/(6*11) + 3*hi/6), str (qwe [i1+10]), 80);
-        if (i < 7) buttons [i1+30] = new RectButton (int (4*w/(11*13) + 19*w/143 + i*(w/11+w/(11*13))), int (he + 6*hi/(6*11) + 3*hi/6), int (w/11 + 4*w/(11*13) + 19*w/143+i*(w/11+w/(11*13))), int (he + 6*hi/(6*11) + 4*hi/6), str (qwe [i1+20]), 80);
-        buttons [i1+44] = new RectButton (int (2*w/(11*13)+i*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + hi/6), int (2*w/(11*13)+w/11+i*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + 2*hi/6), str (QWE [i1]), 80);
-        buttons [i1+54] = new RectButton (int (2*w/(11*13)+i*(w/11+w/(11*13))), int (he + 5*hi/(6*11) + 2*hi/6), int (2*w/(11*13)+w/11+i*(w/11+w/(11*13))), int (he + 5*hi/(6*11) + 3*hi/6), str (QWE [i1+10]), 80);
-        if (i < 7) buttons [i1+64] = new RectButton (int (4*w/(11*13) + 19*w/143 + i*(w/11+w/(11*13))), int (he + 6*hi/(6*11) + 3*hi/6), int (w/11 + 4*w/(11*13) + 19*w/143+i*(w/11+w/(11*13))), int (he + 6*hi/(6*11) + 4*hi/6), str (QWE [i1+20]), 80);
+        buttons [i1+10] = new RectButton (int (2*w/(11*13)+i*(w/11+w/(11*13))), int (height_exterior + 4*hi/(6*11) + hi/6), int (2*w/(11*13)+w/11+i*(w/11+w/(11*13))), int (height_exterior + 4*hi/(6*11) + 2*hi/6), str (qwe [i1]), 80);
+        buttons [i1+20] = new RectButton (int (2*w/(11*13)+i*(w/11+w/(11*13))), int (height_exterior + 5*hi/(6*11) + 2*hi/6), int (2*w/(11*13)+w/11+i*(w/11+w/(11*13))), int (height_exterior + 5*hi/(6*11) + 3*hi/6), str (qwe [i1+10]), 80);
+        if (i < 7) buttons [i1+30] = new RectButton (int (4*w/(11*13) + 19*w/143 + i*(w/11+w/(11*13))), int (height_exterior + 6*hi/(6*11) + 3*hi/6), int (w/11 + 4*w/(11*13) + 19*w/143+i*(w/11+w/(11*13))), int (height_exterior + 6*hi/(6*11) + 4*hi/6), str (qwe [i1+20]), 80);
+        buttons [i1+44] = new RectButton (int (2*w/(11*13)+i*(w/11+w/(11*13))), int (height_exterior + 4*hi/(6*11) + hi/6), int (2*w/(11*13)+w/11+i*(w/11+w/(11*13))), int (height_exterior + 4*hi/(6*11) + 2*hi/6), str (QWE [i1]), 80);
+        buttons [i1+54] = new RectButton (int (2*w/(11*13)+i*(w/11+w/(11*13))), int (height_exterior + 5*hi/(6*11) + 2*hi/6), int (2*w/(11*13)+w/11+i*(w/11+w/(11*13))), int (height_exterior + 5*hi/(6*11) + 3*hi/6), str (QWE [i1+10]), 80);
+        if (i < 7) buttons [i1+64] = new RectButton (int (4*w/(11*13) + 19*w/143 + i*(w/11+w/(11*13))), int (height_exterior + 6*hi/(6*11) + 3*hi/6), int (w/11 + 4*w/(11*13) + 19*w/143+i*(w/11+w/(11*13))), int (height_exterior + 6*hi/(6*11) + 4*hi/6), str (QWE [i1+20]), 80);
       }
       // These are shown always.
       buttons [37] = new RectButton (int (4*w/(11*13) + 19*w/143 + w/11 + w/(11*13)), int (he + 7*hi/(6*11) + 4*hi/6), int (w/11 + 4*w/(11*13) + 19*w/143 + 5*(w/11+w/(11*13))), int (he + 7*hi/(6*11) + 5*hi/6), "");
@@ -262,4 +262,5 @@
       sal = stri;
     }
   }
- */
+  */
+ 

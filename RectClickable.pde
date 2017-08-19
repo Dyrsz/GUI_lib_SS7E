@@ -11,7 +11,7 @@
    private color colorBackground = 0;
    private color colorBackOn = 0;
   
-   /* I think it is not necessary.
+   /* I think this is not necessary.
    RectClickable (int tx1, int ty1, int tx2, int ty2, String ttitle) {
       x1 = tx1;
       x2 = tx2;
