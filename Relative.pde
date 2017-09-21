@@ -14,20 +14,21 @@
      _width = twidth;
    }
    
-   public static RectButton RectButton (float x1, float y1, 
+   public static UIButton UIButton (float x1, float y1, 
    float x2, float y2, String title) {
-     return s.new RectButton (int(Math.round (_width*x1)), 
+     return s.new UIButton (int(Math.round (_width*x1)), 
      int(Math.round (_height*y1)), int(Math.round (_width*x2)), 
      int(Math.round (_height*y2)), title);
    }
    
-   public static RectButton RectButton (float [] position, String title) {
-     if (position.length == 4) {
-       return s.new RectButton (int(Math.round (_width*position [0])), 
-       int(Math.round (_height*position [1])), int(Math.round (_width*position [2])), 
-       int(Math.round (_height*position [3])), title);
+   public static UIButton UIButton (float [] position, String title) {
+     float [] tposition = position;
+     if (tposition.length == 4) {
+       return s.new UIButton (int(Math.round (_width*tposition [0])), 
+       int(Math.round (_height*tposition [1])), int(Math.round (_width*tposition [2])), 
+       int(Math.round (_height*tposition [3])), title);
      } else {
-       println ("Bad input on Relative.RectButton (float [], String). Bad array input.");
+       println ("Bad input on Relative.UIButton (float [], String). Bad array input.");
        return null;
      }
    }

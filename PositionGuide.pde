@@ -15,38 +15,48 @@
    private int h = height;
    
    public PositionGuide (String output, String input) {
-     if (output.equals ("Row") || output.equals ("Column") || output.equals ("Matrix")) {
-       if (input.equals ("Global") || input.equals ("Relative") || input.equals ("ScreenRelative")) {
-         outputType = output;
-         inputType = input;
+     String toutput = output;
+     String tinput = input;
+     if (toutput.equals ("Row") || toutput.equals ("Column") || toutput.equals ("Matrix")) {
+       if (tinput.equals ("Global") || tinput.equals ("Relative") || tinput.equals ("ScreenRelative")) {
+         outputType = toutput;
+         inputType = tinput;
        } else {
          println ("Bad input on PositionGuide (String outputType, String inputType).");
          println ("Correct input types are: 'Global', 'Relative' or 'ScreenRelative'.");
+         println ("Default input set as 'Global'.");
        }
      } else {
        println ("Bad input on PositionGuide (String outputType, String inputType).");
        println ("Correct output types are: 'Row', 'Column' or 'Matrix'.");
+       println ("Default output set as 'Row'.");
      }
    }
    
    public PositionGuide (String output, String input, String mode) {
-     if (output.equals ("Row") || output.equals ("Column") || output.equals ("Matrix")) {
-       if (input.equals ("Global") || input.equals ("Relative") || input.equals ("ScreenRelative")) {
-         if (mode.equals ("Manual") || mode.equals ("FixedSize") || mode.equals ("UniformDistribution")) {
-           outputType = output;
-           inputType = input;
-           defaultMode = mode;
+     String toutput = output;
+     String tinput = input;
+     String tmode = mode;
+     if (toutput.equals ("Row") || toutput.equals ("Column") || toutput.equals ("Matrix")) {
+       if (tinput.equals ("Global") || tinput.equals ("Relative") || tinput.equals ("ScreenRelative")) {
+         if (tmode.equals ("Manual") || tmode.equals ("FixedSize") || tmode.equals ("UniformDistribution")) {
+           outputType = toutput;
+           inputType = tinput;
+           defaultMode = tmode;
          } else {
            println ("Bad input on PositionGuide (String outputType, String inputType, String defaultMode).");
            println ("Correct default modes are: 'Manual', 'FixedSize' or 'UmiformDistribution'.");
+           println ("Default mode set as 'UniformDistribution'.");
          }
        } else {
          println ("Bad input on PositionGuide (String outputType, String inputType, String defaultMode).");
          println ("Correct input types are: 'Global', 'Relative' or 'ScreenRelative'.");
+         println ("Default input set as 'Global'.");
        }
      } else {
        println ("Bad input on PositionGuide (String outputType, String inputType, String defaultMode).");
        println ("Correct output types are: 'Row', 'Column' or 'Matrix'.");
+       println ("Default output set as 'Row'.");
      }
    }
    
@@ -185,12 +195,14 @@
        } else {
          println ("Bad call on PositionGuide.GetColumnCoord (). Use PositionGuide.Generate () first.");
        }
+       return null;
      } else {
        return columnCoord;
      }
    }
    
    public int [] GetColumnCoord (int index) {
+     int tindex = index;
      int [] ret = new int [4];
      if (columnCoord == null) {
        if (outputType.equals ("Row") || outputType.equals ("Matrix")) {
@@ -199,9 +211,9 @@
          println ("Bad call on PositionGuide.GetColumnCoord (). Use PositionGuide.Generate () first.");
        }
      } else {
-       if (0 >= index && index < columnLength) {
+       if (0 <= tindex && tindex < columnLength) {
          for (int i = 0; i < 4; i++)
-           ret [i] = columnCoord [index][i];
+           ret [i] = columnCoord [tindex][i];
        } else {
          println ("Bad index on PositionGuide.GetColumnCoord (index)");
        }
@@ -244,12 +256,15 @@
        } else {
          println ("Bad call on PositionGuide.GetMatrixCoord (). Use PositionGuide.Generate () first.");
        }
+       return null;
      } else {
        return matrixCoord;
      }
    }
    
-   public int [] GetMatrixCoord (int in, int jn) {
+   public int [] GetMatrixCoord (int ind, int jnd) {
+     int in = ind;
+     int jn = jnd;
      int [] ret = new int [4];
      if (matrixCoord == null) {
        if (outputType.equals ("Column") || outputType.equals ("Row")) {
@@ -258,8 +273,8 @@
          println ("Bad call on PositionGuide.GetMatrixCoord (). Use PositionGuide.Generate () first.");
        }
      } else {
-       if (0 >= in && in < rowLength) {
-         if (0 >= jn && jn < columnLength) {
+       if (0 <= in && in < rowLength) {
+         if (0 <= jn && jn < columnLength) {
            for (int i = 0; i < 4; i++)
              ret [i] = matrixCoord [in][jn][i];
          } else {
@@ -330,7 +345,7 @@
      return float (rightOffset)/w;
    }
    
-   public float [] GetRelativeTopOffset () {
+   public float GetRelativeTopOffset () {
      return float (topOffset)/h;
    }
    
@@ -359,12 +374,14 @@
        } else {
          println ("Bad call on PositionGuide.GetRowCoord (). Use PositionGuide.Generate () first.");
        }
+       return null;
      } else {
        return rowCoord;
      }
    }
    
    public int [] GetRowCoord (int index) {
+     int tindex = index;
      int [] ret = new int [4];
      if (rowCoord == null) {
        if (outputType.equals ("Column") || outputType.equals ("Matrix")) {
@@ -373,9 +390,9 @@
          println ("Bad call on PositionGuide.GetRowCoord (). Use PositionGuide.Generate () first.");
        }
      } else {
-       if (0 >= index && index < rowLength) {
+       if (0 <= tindex && tindex < rowLength) {
          for (int i = 0; i < 4; i++)
-           ret [i] = rowCoord [index][i];
+           ret [i] = rowCoord [tindex][i];
        } else {
          println ("Bad index on PositionGuide.GetRowCoord (index)");
        }
@@ -392,7 +409,7 @@
    }
    
    public float GetScreenRelativeElementSizeX () {
-     return float (elememtSizeX)/w;
+     return float (elementSizeX)/w;
    }
    
    public float GetScreenRelativeElementSizeY () {
@@ -455,8 +472,9 @@
    }
    
    public void SetDefaultMode (String mode) {
-     if (mode.equals ("UniformDistribution") || mode.equals ("FixedSize") || mode.equals ("Manual")) {
-       defaultMode = mode;
+     String tmode = mode;
+     if (tmode.equals ("UniformDistribution") || tmode.equals ("FixedSize") || tmode.equals ("Manual")) {
+       defaultMode = tmode;
      } else {
        println ("Bad input on PositionGuide.SetDefaultMode (String)");
        println ("Avaiable modes are 'UniformDistribution', 'FixedSize' or 'Manual'.");
@@ -476,7 +494,8 @@
      }
    }
    
-   public void SetDistanceX (float x) {
+   public void SetDistanceX (float tx) {
+     float x = tx;
      if (inputType.equals ("Relative")) {
        distanceX = int (Math.round ((w-leftOffset-rightOffset)*x));
      } else if (inputType.equals ("ScreenRelative")) {
@@ -500,7 +519,8 @@
      }
    }
    
-   public void SetDistanceY (float y) {
+   public void SetDistanceY (float ty) {
+     float y = ty;
      if (inputType.equals ("Relative")) {
        distanceY = int (Math.round ((w-leftOffset-rightOffset)*y));
      } else if (inputType.equals ("ScreenRelative")) {
@@ -524,7 +544,8 @@
      }
    }
    
-   public void SetElementSizeX (float x) {
+   public void SetElementSizeX (float tx) {
+     float x = tx;
      if (inputType.equals ("Relative")) {
        elementSizeX = int (Math.round ((w-leftOffset-rightOffset)*x));
      } else if (inputType.equals ("ScreenRelative")) {
@@ -548,7 +569,8 @@
      }
    }
    
-   public void SetElementSizeY (float y) {
+   public void SetElementSizeY (float ty) {
+     float y = ty;
      if (inputType.equals ("Relative")) {
        elementSizeY = int (Math.round ((w-leftOffset-rightOffset)*y));
      } else if (inputType.equals ("ScreenRelative")) {
@@ -559,7 +581,8 @@
      }
    }
    
-   public void SetInputType (String input) {
+   public void SetInputType (String tinput) {
+     String input = tinput;
      if (input.equals ("Global") || input.equals ("Relative") || input.equals ("ScreenRelative")) {
        inputType = input;
      } else {
@@ -606,9 +629,10 @@
      }
    }
    
-   public void SetOffset (int [] p) {
+   public void SetOffset (int [] tp) {
+     int [] p = tp;
      if (inputType.equals ("Global")) {
-       if (x.length == 4) {
+       if (p.length == 4) {
          leftOffset = p [0];
          rightOffset = p [1];
          topOffset = p [2];
@@ -639,7 +663,26 @@
      }
    }
    
-   public void SetOutputType (String output) {
+   public void SetOffset (float [] tp) {
+     float [] p = tp;
+     if (inputType.equals ("Relative") || inputType.equals ("ScreenRelative")) {
+       if (p.length == 2) {
+         leftOffset = int (Math.round (w*p [0]));
+         rightOffset = int (Math.round (w*p [1]));
+         topOffset = int (Math.round (h*p [2]));
+         botOffset = int (Math.round (h*p [3]));
+       } else {
+         println ("Bad input on PositionGuide.SetOffset (float [] p).");
+         println ("p must have length == 2");
+       }
+     } else {
+       println ("Bad input on PositionGuide.SetOffset (float [] p).");
+       println ("Actual input type is Global, so you must use ints as arguments.");
+     }
+   }
+   
+   public void SetOutputType (String toutput) {
+     String output = toutput;
      if (output.equals ("Row") || output.equals ("Column") || output.equals ("Matrix")) {
        outputType = output;
      } else {
@@ -661,7 +704,8 @@
      }
    }
    
-   public void SetRightOffset (float right) {
+   public void SetRightOffset (float tright) {
+     float right = tright;
      if (inputType.equals ("Relative") || inputType.equals ("ScreenRelative")) {
        rightOffset = int (Math.round (w*right));
      } else {
@@ -697,29 +741,13 @@
      }
    }
    
-   public void SetTopOffset (float top) {
+   public void SetTopOffset (float ttop) {
+     float top = ttop;
      if (inputType.equals ("Relative") || inputType.equals ("ScreenRelative")) {
        topOffset = int (Math.round (h*top));
      } else {
        println ("Bad input on PositionGuide.SetTopOffset (float top).");
        println ("Actual input type is Global, so you must use int as argument.");
-     }
-   }
-   
-   public void SetXOffset (float [] p) {
-     if (inputType.equals ("Relative") || inputType.equals ("ScreenRelative")) {
-       if (x.length == 2) {
-         leftOffset = int (Math.round (w*p [0]));
-         rightOffset = int (Math.round (w*p [1]));
-         topOffset = int (Math.round (h*p [2]));
-         botOffset = int (Math.round (h*p [3]));
-       } else {
-         println ("Bad input on PositionGuide.SetOffset (float [] p).");
-         println ("p must have length == 2");
-       }
-     } else {
-       println ("Bad input on PositionGuide.SetOffset (float [] p).");
-       println ("Actual input type is Global, so you must use ints as arguments.");
      }
    }
    
@@ -737,7 +765,8 @@
      }
    }
    
-   public void SetXOffset (int [] x) {
+   public void SetXOffset (int [] tx) {
+     int [] x = tx;
      if (inputType.equals ("Global")) {
        if (x.length == 2) {
          leftOffset = x [0];
@@ -766,7 +795,8 @@
      }
    }
    
-   public void SetXOffset (float [] x) {
+   public void SetXOffset (float [] tx) {
+     float [] x = tx;
      if (inputType.equals ("Relative") || inputType.equals ("ScreenRelative")) {
        if (x.length == 2) {
          leftOffset = int (Math.round (w*x [0]));
@@ -795,7 +825,8 @@
      }
    }
    
-   public void SetYOffset (int [] y) {
+   public void SetYOffset (int [] ty) {
+     int [] y = ty;
      if (inputType.equals ("Global")) {
        if (y.length == 2) {
          topOffset = y [0];
@@ -824,7 +855,8 @@
      }
    }
    
-   public void SetYOffset (float [] y) {
+   public void SetYOffset (float [] ty) {
+     float [] y = ty;
      if (inputType.equals ("Relative") || inputType.equals ("ScreenRelative")) {
        if (y.length == 2) {
          topOffset = int (Math.round (h*y [0]));
