@@ -1,3 +1,0 @@
-# GUI_lib_SS7E
-Librería botones, capas, menús, teclado...
-Para SS7E. Adaptable.
