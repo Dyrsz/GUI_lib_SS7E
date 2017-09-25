@@ -1,7 +1,9 @@
 
  /* Pendientes:
+ 
+   - Layers.
    
-   // UIElement.
+   - Arreglar teclado, teclado como Layer.
    
    - Tecla back en el teclado.
    - Vibración en el teclado.
@@ -22,18 +24,21 @@
  */
  
  //PositionGuide pg;
- UIButton but; // = new RectButton [10];
- SelectParameter pp, spX, spY, spNP, spTS;
+ //UIButton but; // = new RectButton [10];
+ //SelectParameter pp, spX, spY, spNP, spTS;
  // CheckBox ch;
- // Keyboard kb;
+ Keyboard kb;
  // TextBox tb;
+ UIElement test;
  int x, y, ts;
  String np;
 
 void setup () {
   //ch = new CheckBox  (300, 1200, 600, 1500);
   orientation (PORTRAIT); // LANDSCAPE si no.
-  // kb = new Keyboard ();
+  kb = new Keyboard ();
+  test = UI_IDRecolector.SearchUIByID (1);
+  test.SetColorBackground (color (200, 0, 0));
   // tb = new TextBox (kb, 300, 700, 600, 1000, 60);
   /*
   pg = new PositionGuide ("Column", "Relative", "UniformDistribution");
@@ -43,6 +48,7 @@ void setup () {
   //Relative.onSetup (this);
   for (int i = 0; i<10; i++) but [i] = new RectButton (pg.GetColumnCoord (i), str(i));
   */
+  /*
   x = 200;
   y = 100;
   
@@ -64,16 +70,18 @@ void setup () {
   spTS.SetIntValue (but.GetTextSize ());
   spTS.SetButtonsAceleration (60);
   spTS.SetButtonsLimit (100);
+  */
 }
 
 void draw () {
   background (0);
  
   // ch.display ();
-  // kb.display ();
+  kb.display ();
   // kb.SetHide (false);
   // tb.display ();
   
+  /*
   but.display ();
   
   pp.display ();
@@ -99,7 +107,6 @@ void draw () {
     but.SetTextSize (ts);
   }
   
-  /*
   for (int i = 0; i < 10; i++) {
     but [i].display ();
     if (but[i].sincePressedMillisMod (50*i +50)) {

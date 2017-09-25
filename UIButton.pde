@@ -4,11 +4,14 @@
     private int _sincePressedMillisModSeg, _sinceOnMillisModSeg;
     private int _sincePressedAceletationSeg, _sinceOnAceletationSeg;
     
-    public UIButton () {}
+    public UIButton () {
+      MakeID ();
+    }
     
     public UIButton (int tx1, int ty1, int tx2, int ty2, String ttitle) {
       SetPosition (tx1, ty1, tx2, ty2);
       SetText (ttitle);
+      MakeID ();
     }
   
     public UIButton (int [] position, String ttitle) {
@@ -20,6 +23,7 @@
       } else {
         println ("Bad call on UIButton (int [], String). Bad array input.");
       }
+      MakeID ();
     }
     
     public void display () {

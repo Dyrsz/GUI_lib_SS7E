@@ -1,13 +1,14 @@
-  /*
+  
   class Keyboard {
     // Vertical orientation
-    private boolean show;
-    private RectButton [] buttons = new RectButton [115];
-    float height_exterior = 3/5;
-    float height_interior = 2/5;
-    
-    
-    int i1; // auxiliar int.
+    // private boolean show; later
+    private UIButton [] buttons = new UIButton [115];
+    private float height_exterior = 0.6;
+    private float height_interior = 0.4;
+    // No me pongo a sustituir, que sería una pérdida de tiempo.
+    // Busco alguna captura que tuviera y me apaño con PositionGuides.
+    private PositionGuide pg_numbers;
+    // Arreglar todo esto...
     int time;
     byte shift;
     boolean sym;
@@ -17,12 +18,31 @@
     char [] qwe = {'q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','ñ','z','x','c','v','b','n','m'};
     char [] QWE = {'Q','W','E','R','T','Y','U','I','O','P','A','S','D','F','G','H','J','K','L','Ñ','Z','X','C','V','B','N','M'};
     char [] csym = {'+','×','÷','=','%','_','€','¡','!','-','@','#','$','/','^','&','*','¿','?','~','(',')','"','<','>','[',']','{','}'};
-    char [] ctil = {'á','é','í','ó','ú','Á','É','Í','Ó','Ú'};
+    //char [] ctil = {'á','é','í','ó','ú','Á','��','Í','Ó','Ú'};
     String sal = "";
     boolean intro;
     boolean hideable;
+    // Auxiliars.
+    //private int i1;
     
     Keyboard () {
+      float widthOffSet = 2.0 / (11.0 * 13.0);
+      int buttonsHeight = int (height*height_interior/6.0);
+      pg_numbers = new PositionGuide ("Row", "Relative", "UniformDistribution");
+      pg_numbers.SetOffset (widthOffSet, widthOffSet, height_exterior + 2*height_interior/(6*11), 0);
+      pg_numbers.SetRowLength (10);
+      pg_numbers.Generate ();
+      
+      buttons [0] = new UIButton (pg_numbers.GetRowCoord (9), "0");
+      for (int i = 1; i < 10; i++) {
+        buttons [i] = new UIButton (pg_numbers.GetRowCoord (i-1), str (i));
+      }
+      
+      for (int i = 0; i < 10; i++) {
+        buttons [i].SetLengthY (buttonsHeight);
+        buttons [i].SetTextSize (80);
+      }
+      /*
       // First row. Numbers.
       for (float i = 0; i < 10; i++) {
         i1 = int (i);
@@ -43,34 +63,34 @@
         if (i < 7) buttons [i1+64] = new RectButton (int (4*w/(11*13) + 19*w/143 + i*(w/11+w/(11*13))), int (height_exterior + 6*hi/(6*11) + 3*hi/6), int (w/11 + 4*w/(11*13) + 19*w/143+i*(w/11+w/(11*13))), int (height_exterior + 6*hi/(6*11) + 4*hi/6), str (QWE [i1+20]), 80);
       }
       // These are shown always.
-      buttons [37] = new RectButton (int (4*w/(11*13) + 19*w/143 + w/11 + w/(11*13)), int (he + 7*hi/(6*11) + 4*hi/6), int (w/11 + 4*w/(11*13) + 19*w/143 + 5*(w/11+w/(11*13))), int (he + 7*hi/(6*11) + 5*hi/6), "");
-      buttons [38] = new RectButton (int (w - (2*w/(11*13) + 19*w/143)), int (he + 7*hi/(6*11) + 4*hi/6), int (w - 2*w/(11*13)), int (he + 7*hi/(6*11) + 5*hi/6), "Intro", 50);
-      buttons [39] = new RectButton (int (w - (2*w/(11*13) + 19*w/143)), int (he + 6*hi/(6*11) + 3*hi/6), int (w - 2*w/(11*13)), int (he + 6*hi/(6*11) + 4*hi/6), "《--", 70);
+      buttons [37] = new RectButton (int (4*w/(11*13) + 19*w/143 + w/11 + w/(11*13)), int (height_exterior + 7*hi/(6*11) + 4*hi/6), int (w/11 + 4*w/(11*13) + 19*w/143 + 5*(w/11+w/(11*13))), int (height_exterior + 7*hi/(6*11) + 5*hi/6), "");
+      buttons [38] = new RectButton (int (w - (2*w/(11*13) + 19*w/143)), int (height_exterior + 7*hi/(6*11) + 4*hi/6), int (w - 2*w/(11*13)), int (height_exterior + 7*hi/(6*11) + 5*hi/6), "Intro", 50);
+      buttons [39] = new RectButton (int (w - (2*w/(11*13) + 19*w/143)), int (height_exterior + 6*hi/(6*11) + 3*hi/6), int (w - 2*w/(11*13)), int (height_exterior + 6*hi/(6*11) + 4*hi/6), "《--", 70);
       // shift = 0, !sym:
-      buttons [40] = new RectButton (int (2*w/(11*13)), int (he + 6*hi/(6*11) + 3*hi/6), int (2*w/(11*13) + 19*w/143), int (he + 6*hi/(6*11) + 4*hi/6), "Shift", 50);
-      buttons [41] = new RectButton (int (2*w/(11*13)), int (he + 7*hi/(6*11) + 4*hi/6), int (2*w/(11*13) + 19*w/143), int (he + 7*hi/(6*11) + 5*hi/6), "Sym", 60);
-      buttons [42] = new RectButton (int (4*w/(11*13) + 19*w/143), int (he + 7*hi/(6*11) + 4*hi/6), int (w/11 + 4*w/(11*13) + 19*w/143), int (he + 7*hi/(6*11) + 5*hi/6), ",", 100);
-      buttons [43] = new RectButton (int (4*w/(11*13) + 19*w/143 + 6*(w/11+w/(11*13))), int (he + 7*hi/(6*11) + 4*hi/6), int (w/11 + 4*w/(11*13) + 19*w/143+6*(w/11+w/(11*13))), int (he + 7*hi/(6*11) + 5*hi/6), ".", 100);
+      buttons [40] = new RectButton (int (2*w/(11*13)), int (he + 6*hi/(6*11) + 3*hi/6), int (2*w/(11*13) + 19*w/143), int (height_exterior + 6*hi/(6*11) + 4*hi/6), "Shift", 50);
+      buttons [41] = new RectButton (int (2*w/(11*13)), int (he + 7*hi/(6*11) + 4*hi/6), int (2*w/(11*13) + 19*w/143), int (height_exterior + 7*hi/(6*11) + 5*hi/6), "Sym", 60);
+      buttons [42] = new RectButton (int (4*w/(11*13) + 19*w/143), int (he + 7*hi/(6*11) + 4*hi/6), int (w/11 + 4*w/(11*13) + 19*w/143), int (height_exterior + 7*hi/(6*11) + 5*hi/6), ",", 100);
+      buttons [43] = new RectButton (int (4*w/(11*13) + 19*w/143 + 6*(w/11+w/(11*13))), int (height_exterior + 7*hi/(6*11) + 4*hi/6), int (w/11 + 4*w/(11*13) + 19*w/143+6*(w/11+w/(11*13))), int (height_exterior + 7*hi/(6*11) + 5*hi/6), ".", 100);
       // shift = 1, !sym:
-      buttons [71] = new RectButton (int (4*w/(11*13) + 19*w/143), int (he + 7*hi/(6*11) + 4*hi/6), int (w/11 + 4*w/(11*13) + 19*w/143), int (he + 7*hi/(6*11) + 5*hi/6), ";", 100);
-      buttons [72] = new RectButton (int (4*w/(11*13) + 19*w/143 + 6*(w/11+w/(11*13))), int (he + 7*hi/(6*11) + 4*hi/6), int (w/11 + 4*w/(11*13) + 19*w/143+6*(w/11+w/(11*13))), int (he + 7*hi/(6*11) + 5*hi/6), ":", 100);
+      buttons [71] = new RectButton (int (4*w/(11*13) + 19*w/143), int (height_exterior + 7*hi/(6*11) + 4*hi/6), int (w/11 + 4*w/(11*13) + 19*w/143), int (height_exterior + 7*hi/(6*11) + 5*hi/6), ";", 100);
+      buttons [72] = new RectButton (int (4*w/(11*13) + 19*w/143 + 6*(w/11+w/(11*13))), int (height_exterior + 7*hi/(6*11) + 4*hi/6), int (w/11 + 4*w/(11*13) + 19*w/143+6*(w/11+w/(11*13))), int (height_exterior + 7*hi/(6*11) + 5*hi/6), ":", 100);
       // sym:
       for (float i = 0; i < 10; i++) {
         i1 = int (i);
-        buttons [i1+73] = new RectButton (int (2*w/(11*13)+i*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + hi/6), int (2*w/(11*13)+w/11+i*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + 2*hi/6), str (csym [i1]), 80);
-        buttons [i1+83] = new RectButton (int (2*w/(11*13)+i*(w/11+w/(11*13))), int (he + 5*hi/(6*11) + 2*hi/6), int (2*w/(11*13)+w/11+i*(w/11+w/(11*13))), int (he + 5*hi/(6*11) + 3*hi/6), str (csym [i1+10]), 80);
-        if (i < 7) buttons [i1+93] = new RectButton (int (4*w/(11*13) + 19*w/143 + i*(w/11+w/(11*13))), int (he + 6*hi/(6*11) + 3*hi/6), int (w/11 + 4*w/(11*13) + 19*w/143+i*(w/11+w/(11*13))), int (he + 6*hi/(6*11) + 4*hi/6), str (csym [i1+20]), 80);
+        buttons [i1+73] = new RectButton (int (2*w/(11*13)+i*(w/11+w/(11*13))), int (height_exterior + 4*hi/(6*11) + hi/6), int (2*w/(11*13)+w/11+i*(w/11+w/(11*13))), int (height_exterior + 4*hi/(6*11) + 2*hi/6), str (csym [i1]), 80);
+        buttons [i1+83] = new RectButton (int (2*w/(11*13)+i*(w/11+w/(11*13))), int (height_exterior + 5*hi/(6*11) + 2*hi/6), int (2*w/(11*13)+w/11+i*(w/11+w/(11*13))), int (height_exterior + 5*hi/(6*11) + 3*hi/6), str (csym [i1+10]), 80);
+        if (i < 7) buttons [i1+93] = new RectButton (int (4*w/(11*13) + 19*w/143 + i*(w/11+w/(11*13))), int (height_exterior + 6*hi/(6*11) + 3*hi/6), int (w/11 + 4*w/(11*13) + 19*w/143+i*(w/11+w/(11*13))), int (height_exterior + 6*hi/(6*11) + 4*hi/6), str (csym [i1+20]), 80);
       }
-      buttons [100] = new RectButton (int (4*w/(11*13) + 19*w/143), int (he + 7*hi/(6*11) + 4*hi/6), int (w/11 + 4*w/(11*13) + 19*w/143), int (he + 7*hi/(6*11) + 5*hi/6), str (csym [27]), 100);
-      buttons [101] = new RectButton (int (4*w/(11*13) + 19*w/143 + 6*(w/11+w/(11*13))), int (he + 7*hi/(6*11) + 4*hi/6), int (w/11 + 4*w/(11*13) + 19*w/143+6*(w/11+w/(11*13))), int (he + 7*hi/(6*11) + 5*hi/6), str (csym [28]), 100);
-      buttons [102] = new RectButton (int (2*w/(11*13)), int (he + 7*hi/(6*11) + 4*hi/6), int (2*w/(11*13) + 19*w/143), int (he + 7*hi/(6*11) + 5*hi/6), "ABC", 60);
-      buttons [103] = new RectButton (int (2*w/(11*13)), int (he + 6*hi/(6*11) + 3*hi/6), int (2*w/(11*13) + 19*w/143), int (he + 6*hi/(6*11) + 4*hi/6), "", 50);
+      buttons [100] = new RectButton (int (4*w/(11*13) + 19*w/143), int (height_exterior + 7*hi/(6*11) + 4*hi/6), int (w/11 + 4*w/(11*13) + 19*w/143), int (height_exterior + 7*hi/(6*11) + 5*hi/6), str (csym [27]), 100);
+      buttons [101] = new RectButton (int (4*w/(11*13) + 19*w/143 + 6*(w/11+w/(11*13))), int (height_exterior + 7*hi/(6*11) + 4*hi/6), int (w/11 + 4*w/(11*13) + 19*w/143+6*(w/11+w/(11*13))), int (height_exterior + 7*hi/(6*11) + 5*hi/6), str (csym [28]), 100);
+      buttons [102] = new RectButton (int (2*w/(11*13)), int (height_exterior + 7*hi/(6*11) + 4*hi/6), int (2*w/(11*13) + 19*w/143), int (height_exterior + 7*hi/(6*11) + 5*hi/6), "ABC", 60);
+      buttons [103] = new RectButton (int (2*w/(11*13)), int (height_exterior + 6*hi/(6*11) + 3*hi/6), int (2*w/(11*13) + 19*w/143), int (height_exterior + 6*hi/(6*11) + 4*hi/6), "", 50);
       // shift, capital letters (shift = 2)
-      buttons [104] = new RectButton (int (2*w/(11*13)), int (he + 6*hi/(6*11) + 3*hi/6), int (2*w/(11*13) + 19*w/143), int (he + 6*hi/(6*11) + 4*hi/6), "Shift", 50);
+      buttons [104] = new RectButton (int (2*w/(11*13)), int (height_exterior + 6*hi/(6*11) + 3*hi/6), int (2*w/(11*13) + 19*w/143), int (height_exterior + 6*hi/(6*11) + 4*hi/6), "Shift", 50);
       buttons [104].SetColorBackground (150);
       buttons [104].SetColorBackOn (150);
       // Accent marks.
-      buttons [105] = new RectButton (int (2*w/(11*13)), int (he + 5*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11), int (he + 5*hi/(6*11) + 3*hi/6 - 10*hi/(6*11)), "á", 80);
+      buttons [105] = new RectButton (int (2*w/(11*13)), int (height_exterior + 5*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11), int (he + 5*hi/(6*11) + 3*hi/6 - 10*hi/(6*11)), "á", 80);
       buttons [106] = new RectButton (int (2*w/(11*13)+2*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11+2*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), "é", 80);
       buttons [107] = new RectButton (int (2*w/(11*13)+7*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11+7*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), "í", 80);
       buttons [108] = new RectButton (int (2*w/(11*13)+8*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11+8*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), "ó", 80);
@@ -81,9 +101,14 @@
       buttons [113] = new RectButton (int (2*w/(11*13)+8*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11+8*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), "Ó", 80);
       buttons [114] = new RectButton (int (2*w/(11*13)+6*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + hi/6 -10*hi/(6*11)), int (2*w/(11*13)+w/11+6*(w/11+w/(11*13))), int (he + 4*hi/(6*11) + 2*hi/6 -10*hi/(6*11)), "Ú", 80);
       for (int i = 0; i < 115; i++) buttons [i].SetHide (true);
+      */
+    
     }
     
     public void display () {
+      for (int i = 0; i < 10; i++) buttons [i].display ();
+      
+      /*
       if (show) {
         fill (0);
         noStroke ();
@@ -165,8 +190,10 @@
         }
         
       }
+      */
     }
     
+    /*
     public String GetString () {
       return sal;
     }
@@ -261,6 +288,5 @@
     public void SetString (String stri) {
       sal = stri;
     }
+    */
   }
-  */
- 
