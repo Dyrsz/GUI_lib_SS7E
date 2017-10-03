@@ -1,55 +1,56 @@
 
  public class UIButton extends UIClickable {
     
+    // Auxiliars.
     private int _sincePressedMillisModSeg, _sinceOnMillisModSeg;
     private int _sincePressedAceletationSeg, _sinceOnAceletationSeg;
+    private boolean _sinceOnMillisModRet, _sincePressedMillisModRet;
     
     public UIButton () {
       MakeID ();
+      UIType = "UIButton";
     }
     
     public UIButton (int tx1, int ty1, int tx2, int ty2, String ttitle) {
-      SetPosition (tx1, ty1, tx2, ty2);
+      SetPosition (tx1, tx2, ty1, ty2);
       SetText (ttitle);
       MakeID ();
+      UIType = "UIButton";
     }
   
     public UIButton (int [] position, String ttitle) {
       int [] tposition = position;
       if (tposition.length == 4) {
-        SetPosition (tposition [0], tposition [1], tposition [2], tposition [3]);
+        SetPosition (tposition);
         SetText (ttitle);
         SetTextSize (30);
       } else {
         println ("Bad call on UIButton (int [], String). Bad array input.");
       }
       MakeID ();
-    }
-    
-    public void display () {
-      onDraw ();
+      UIType = "UIButton";
     }
     
     public boolean sinceOnMillisMod (int tmod) {
-      boolean r = false;
+      _sinceOnMillisModRet = false;
       if (onFirstFrameOn()) {
         _sinceOnMillisModSeg = millis ();
-        r = true;
+        _sinceOnMillisModRet = true;
       }
       if (on ())
         if ((millis () - _sinceOnMillisModSeg) >= tmod) {
           _sinceOnMillisModSeg = millis ();
-          r = true;
+          _sinceOnMillisModRet = true;
         }
-      return r;
+      return _sinceOnMillisModRet;
     }
     
     public boolean sinceOnMillisMod (int tmod, int aceleration, int limit) {
-      boolean r = false;
+      _sinceOnMillisModRet = false;
       if (onFirstFrameOn()) {
         _sinceOnMillisModSeg = millis ();
         _sinceOnAceletationSeg = tmod;
-        r = true;
+        _sinceOnMillisModRet = true;
       }
       if (on ())
         if ((millis () - _sinceOnMillisModSeg) >= _sinceOnAceletationSeg) {
@@ -57,31 +58,31 @@
           _sinceOnAceletationSeg -= aceleration;
           if (_sinceOnAceletationSeg <= limit)
             _sinceOnAceletationSeg = limit;
-          r = true;
+          _sinceOnMillisModRet = true;
         }
-      return r;
+      return _sinceOnMillisModRet;
     }
     
     public boolean sincePressedMillisMod (int tmod) {
-      boolean r = false;
+      _sincePressedMillisModRet = false;
       if (onFirstFramePressed()) {
         _sincePressedMillisModSeg = millis ();
-        r = true;
+        _sincePressedMillisModRet = true;
       }
       if (pressed ())
         if ((millis () - _sincePressedMillisModSeg) >= tmod) {
           _sincePressedMillisModSeg = millis ();
-          r = true;
+          _sincePressedMillisModRet = true;
         }
-      return r;
+      return _sincePressedMillisModRet;
     }
     
     public boolean sincePressedMillisMod (int tmod, int aceleration, int limit) {
-      boolean r = false;
+      _sincePressedMillisModRet = false;
       if (onFirstFramePressed()) {
         _sincePressedMillisModSeg = millis ();
         _sincePressedAceletationSeg = tmod;
-        r = true;
+        _sincePressedMillisModRet = true;
       }
       if (pressed ())
         if ((millis () - _sincePressedMillisModSeg) >= _sincePressedAceletationSeg) {
@@ -89,9 +90,9 @@
           _sincePressedAceletationSeg -= aceleration;
           if (_sincePressedAceletationSeg <= limit)
             _sincePressedAceletationSeg = limit;
-          r = true;
+          _sincePressedMillisModRet = true;
         }
-      return r;
+      return _sincePressedMillisModRet;
     }
     
   }

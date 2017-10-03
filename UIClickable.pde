@@ -1,13 +1,22 @@
 
  public class UIClickable extends UIElement {
 
+   // Parameters
    private boolean active = true;
-   private boolean _firstFramePressedSeg, _firstFrameOnSeg;
-   private int _onMillisSincePressedSeg, _onMillisSinceOnSeg;
    private color colorBackPressed = 100;
    private color colorBackOn = 0;
+   // Auxiliars.
+   private boolean _firstFramePressedSeg, _firstFrameOnSeg;
+   private int _onMillisSincePressedSeg, _onMillisSinceOnSeg;
+   private boolean _onRet, _onFirstFrameOnRet, _onFirstFramePressedRet;
+   private boolean _onMillisSinceOnRet, _onMillisSincePressedRet, _pressedRet;
   
-   public void onDraw () {
+   public UIClickable () {
+     MakeID ();
+     UIType = "UIClickable";
+   }
+   
+   public void display () {
      if (pressed ()) {
        drawBasics (colorBackPressed);
      } else if (on ()) {
@@ -16,7 +25,7 @@
        drawBasics ();
      }
    }
-   
+  
    public color GetColorBackPressed () {
      return colorBackPressed;
    }
@@ -30,74 +39,74 @@
    }
    
    public boolean on () {
-     boolean r = false;
+     _onRet = false;
      if (active)
        if (x1 < mouseX && mouseX < x2)
          if (y1 < mouseY && mouseY < y2)
-           r = true;
-     return r;
+           _onRet = true;
+     return _onRet;
    }
    
    public boolean onFirstFrameOn () {
-     boolean r = false;
+     _onFirstFrameOnRet = false;
      if (active) {
        if (on ()) {
          if (!_firstFrameOnSeg) {
            _firstFrameOnSeg = true;
-           r = true;
+           _onFirstFrameOnRet = true;
          }
        } else {
          _firstFrameOnSeg = false;
        }
      }
-     return r;
+     return _onFirstFrameOnRet;
    }
    
    public boolean onFirstFramePressed () {
-     boolean r = false;
+     _onFirstFramePressedRet = false;
      if (active) {
        if (pressed ()) {
          if (!_firstFramePressedSeg) {
            _firstFramePressedSeg = true;
-           r = true;
+           _onFirstFramePressedRet = true;
          }
        } else {
          _firstFramePressedSeg = false;
        }
      }
-     return r;
+     return _onFirstFramePressedRet;
    }
    
    public boolean onMillisSinceOn (int tmillis) {
-     boolean r = false;
+     _onMillisSinceOnRet = false;
      if (onFirstFrameOn()) _onMillisSinceOnSeg = millis ();
      if (on ()) {
-       if (millis () - _onMillisSinceOnSeg >= tmillis) r = true;
+       if (millis () - _onMillisSinceOnSeg >= tmillis) _onMillisSinceOnRet = true;
      } else {
-       r = false;
+       _onMillisSinceOnRet = false;
      }
-     return r;
+     return _onMillisSinceOnRet;
    }
    
    public boolean onMillisSincePressed (int tmillis) {
-     boolean r = false;
+     _onMillisSincePressedRet = false;
      if (onFirstFramePressed()) _onMillisSincePressedSeg = millis ();
      if (pressed ()) {
-       if (millis () - _onMillisSincePressedSeg >= tmillis) r = true;
+       if (millis () - _onMillisSincePressedSeg >= tmillis) _onMillisSincePressedRet = true;
      } else {
-       r = false;
+       _onMillisSincePressedRet = false;
      }
-     return r;
+     return _onMillisSincePressedRet;
    }
    
    public boolean pressed () {
-     boolean r = false;
+     _pressedRet = false;
      if (active)
        if (mousePressed)
          if (x1 < mouseX && mouseX < x2)
            if (y1 < mouseY && mouseY < y2)
-             r = true;
-     return r;
+             _pressedRet = true;
+     return _pressedRet;
    }
    
    public void SetActive (boolean sActive) {

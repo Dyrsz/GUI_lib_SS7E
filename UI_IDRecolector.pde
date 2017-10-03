@@ -11,7 +11,24 @@
    private static ArrayList <UILayer> layerElements = new ArrayList <UILayer>();
    private static ArrayList <UILayer> layerSpecialElements = new ArrayList <UILayer>();
    
-   public static int GetUI_Ids () {
+   public static void ChangeLayerOrder (UILayer lay, int index) {
+     int s;
+     if (lay.IsSpecialLayer ()) {
+       layerSpecialElements.remove (lay);
+       layerSpecialElements.add (index-1, lay);
+       s = layerSpecialElements.size ();
+       for (int i = 0; i < s; i++)
+         layerSpecialElements.get (i).SetProtectedNumberLayer (i+1);
+     } else {
+       layerElements.remove (lay);
+       layerElements.add (index-1, lay);
+       s = layerElements.size ();
+       for (int i = 0; i < s; i++)
+         layerElements.get (i).SetProtectedNumberLayer (i+1);
+     }
+   }
+   
+   public static int GetUI_IDs () {
      return id;
    }
    
@@ -20,24 +37,6 @@
    }
    
    public static int GetUI_NumberSpecialLayers () {
-     return numberSpecialLayer;
-   }
-   
-   public static int SetUI_ID (UIElement elem) {
-     id ++;
-     idElements.add (elem);
-     return id;
-   }
-   
-   public static int SetUI_NumberLayer (UILayer lay) {
-     numberLayer ++;
-     layerElements.add (lay);
-     return numberLayer;
-   }
-   
-   public static int SetUI_NumberSpecialLayer (UILayer lay) {
-     numberSpecialLayer ++;
-     layerSpecialElements.add (lay);
      return numberSpecialLayer;
    }
    
@@ -70,5 +69,25 @@
        return idElements.get (0);
      }
    }
+   
+   public static int SetUI_ID (UIElement elem) {
+     id ++;
+     idElements.add (elem);
+     return id;
+   }
+   
+   public static int SetUI_NumberLayer (UILayer lay) {
+     numberLayer ++;
+     layerElements.add (lay);
+     return numberLayer;
+   }
+   
+   public static int SetUI_NumberSpecialLayer (UILayer lay) {
+     numberSpecialLayer ++;
+     layerSpecialElements.add (lay);
+     return numberSpecialLayer;
+   }
+   
+   
   
  }

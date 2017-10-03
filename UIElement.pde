@@ -14,18 +14,26 @@
    protected boolean hide = false;
    private String form = "Rect"; // Round, Ghost.
    private color colorBackground = 0;
+   private boolean transparentBackground = false;
    
    private int id = 0;
-  
+   protected String UIType = "UIElement";
+   
+   public void display () {
+     drawBasics ();
+   }
+   
    public void drawBasics () {
      if (!hide) {
        stroke (180);
-       fill(colorBackground);
-       if (form.equals ("Rect")) {
-         rect (x1, y1, lengthX, lengthY);
-       } else {
-         //
-         rect (x1, y1, lengthX, lengthY);
+       if (!transparentBackground) {
+         fill(colorBackground);
+         if (form.equals ("Rect")) {
+           rect (x1, y1, lengthX, lengthY);
+         } else {
+           //
+           rect (x1, y1, lengthX, lengthY);
+         }
        }
        if (!text.equals ("")) {
          textAlign (CENTER);
@@ -40,12 +48,14 @@
    public void drawBasics (color c) {
      if (!hide) {
        stroke (180);
-       fill(c);
-       if (form.equals ("Rect")) {
-         rect (x1, y1, lengthX, lengthY);
-       } else {
-         //
-         rect (x1, y1, lengthX, lengthY);
+       if (!transparentBackground) {
+         fill(c);
+         if (form.equals ("Rect")) {
+           rect (x1, y1, lengthX, lengthY);
+         } else {
+           //
+           rect (x1, y1, lengthX, lengthY);
+         }
        }
        if (!text.equals ("")) {
          textAlign (CENTER);
@@ -66,7 +76,7 @@
      }
    }
    
-   protected void MakeID () { // Do NOT use this method manually.
+   protected void MakeID () {
      id = UI_IDRecolector.SetUI_ID (this);
    }
    
@@ -107,9 +117,17 @@
    public int GetUI_ID () {
      return id;
    }
+   
+   public String GetUIType () {
+     return UIType;
+   }
     
    public boolean IsHide () {
      return hide;
+   }
+   
+   public boolean IsTransparentBackground () {
+     return transparentBackground;
    }
    
    public void SetColorBackground (color tcolor) {
@@ -233,6 +251,10 @@
      if (textWidth (text) +10 > lengthX) SetLengthX (int (textWidth (text)+10));
      if (textSize +10 > lengthY) SetLengthY (textSize + 10);
      AdjustTextPosition ();
+   }
+   
+   public void SetTransparentBackground (boolean b) {
+     transparentBackground = b;
    }
    
  }
