@@ -7,7 +7,7 @@
    protected int y2 = 100;
    private int lengthX = 100;
    private int lengthY = 100;
-   private String text = "";
+   protected String text = "";
    private int textSize = 50;
    private int textx = 50;
    private int texty = 70;
@@ -16,11 +16,36 @@
    private color colorBackground = 0;
    private boolean transparentBackground = false;
    
-   private int id = 0;
+   protected int id = 0;
    protected String UIType = "UIElement";
+   
+   public UIElement () {
+     MakeID ();
+   }
+   
+   public UIElement (int cx1, int cy1, int cx2, int cy2) {
+     MakeID ();
+     SetPosition (cx1, cy1, cx2, cy2);
+   }
+   
+   public UIElement (int [] position) {
+     int [] tposition = position;
+     if (tposition.length == 4) {
+       SetPosition (tposition);
+     } else {
+       println ("Bad call on UIElement (int [] position). Bad array input.");
+     }
+     MakeID ();
+   }
    
    public void display () {
      drawBasics ();
+   }
+   
+   public void Destroy () {
+     if (id > 0) UI_IDRecolector.DestroyElementFromID_Intern (id);
+     id = 0;
+     hide = true;
    }
    
    public void drawBasics () {

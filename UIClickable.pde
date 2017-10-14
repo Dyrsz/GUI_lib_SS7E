@@ -12,9 +12,19 @@
    private boolean _onMillisSinceOnRet, _onMillisSincePressedRet, _pressedRet;
   
    public UIClickable () {
-     MakeID ();
+     super ();
      UIType = "UIClickable";
    }
+   
+   public UIClickable (int cx1, int cy1, int cx2, int cy2) {
+     super (cx1, cy1, cx2, cy2);
+     UIType = "UIClickable";
+   }
+   
+   public UIClickable (int [] position) {
+      super (position);
+      UIType = "UIClickable";
+    }
    
    public void display () {
      if (pressed ()) {

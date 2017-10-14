@@ -10,6 +10,9 @@
    // But I dont expect to be complex here.
    private static ArrayList <UILayer> layerElements = new ArrayList <UILayer>();
    private static ArrayList <UILayer> layerSpecialElements = new ArrayList <UILayer>();
+   private static int numberNullElements = 0;
+   
+   // if destroy UILayer, remove numberLayer from list.
    
    public static void ChangeLayerOrder (UILayer lay, int index) {
      int s;
@@ -28,12 +31,32 @@
      }
    }
    
+   public static void DestroyElementFromID_Intern (int index) {
+     idElements.remove (index-1);
+     idElements.add (index-1, null);
+     numberNullElements++;
+   }
+   
+   public static void DestroyLayerFromID_Intern (int index) {
+     if (layerElements.get (index).IsSpecialLayer ()) {
+       layerSpecialElements.remove (index-1);
+       numberSpecialLayer--;
+     } else {
+       layerElements.remove (index-1);
+       numberLayer--;
+     }
+   }
+   
    public static int GetUI_IDs () {
      return id;
    }
    
    public static int GetUI_NumberLayers () {
      return numberLayer;
+   }
+   
+   public static int GetNumberNullElements () {
+     return numberNullElements;
    }
    
    public static int GetUI_NumberSpecialLayers () {
@@ -71,9 +94,21 @@
    }
    
    public static int SetUI_ID (UIElement elem) {
-     id ++;
-     idElements.add (elem);
-     return id;
+     if (numberNullElements > 0) {
+       for (int i = 0; i < id; i++)
+         if (idElements.get (i) == null) {
+           idElements.remove (i);
+           idElements.add (i, elem);
+           numberNullElements--;
+           return i+1;
+         }
+       println ("Internal problem here.");
+       return 0;
+     } else {
+       id ++;
+       idElements.add (elem);
+       return id;
+     }
    }
    
    public static int SetUI_NumberLayer (UILayer lay) {

@@ -7,27 +7,19 @@
     private boolean _sinceOnMillisModRet, _sincePressedMillisModRet;
     
     public UIButton () {
-      MakeID ();
+      super ();
       UIType = "UIButton";
     }
     
     public UIButton (int tx1, int ty1, int tx2, int ty2, String ttitle) {
-      SetPosition (tx1, tx2, ty1, ty2);
+      super (tx1, ty1, tx2, ty2);
       SetText (ttitle);
-      MakeID ();
       UIType = "UIButton";
     }
   
     public UIButton (int [] position, String ttitle) {
-      int [] tposition = position;
-      if (tposition.length == 4) {
-        SetPosition (tposition);
-        SetText (ttitle);
-        SetTextSize (30);
-      } else {
-        println ("Bad call on UIButton (int [], String). Bad array input.");
-      }
-      MakeID ();
+      super (position);
+      SetText (ttitle);
       UIType = "UIButton";
     }
     

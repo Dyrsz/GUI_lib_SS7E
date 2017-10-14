@@ -10,6 +10,10 @@
    private float f_value = 0.0;
    private float f_increment = 1.0;
    private float f_decrement = 1.0;
+   private boolean hasTopLimit;
+   private float topLimit = 10;
+   private boolean hasBotLimit;
+   private float botLimit = 0;
    private int stringListSize = 1;
    private String [] stringList = {" "};
    private String string_value = " ";
@@ -180,28 +184,52 @@
          if (buttons [0].sincePressedMillisMod (buttonsTimeInterval, buttonsAceleration, buttonsLimit)) {
            if (parameterType.equals ("Int")) {
              i_value += i_increment;
+             if (hasTopLimit)
+               if (i_value >= int (topLimit))
+                 i_value = int (topLimit);
            } else if (parameterType.equals ("Float")) {
              f_value += f_increment;
+             if (hasTopLimit)
+               if (f_value >= topLimit)
+                 f_value = topLimit;
            }
          } else if (buttons [1].sincePressedMillisMod (buttonsTimeInterval, buttonsAceleration, buttonsLimit)) {
            if (parameterType.equals ("Int")) {
              i_value -= i_decrement;
+             if (hasBotLimit)
+               if (i_value <= int (botLimit))
+                 i_value = int (botLimit);
            } else if (parameterType.equals ("Float")) {
              f_value -= f_decrement;
+             if (hasBotLimit)
+               if (f_value <= botLimit)
+                 f_value = botLimit;
            }
          }
        } else {
          if (buttons [0].sincePressedMillisMod (buttonsTimeInterval)) {
            if (parameterType.equals ("Int")) {
              i_value += i_increment;
+             if (hasTopLimit)
+               if (i_value >= int (topLimit))
+                 i_value = int (topLimit);
            } else if (parameterType.equals ("Float")) {
              f_value += f_increment;
+             if (hasTopLimit)
+               if (f_value >= topLimit)
+                 f_value = topLimit;
            }
          } else if (buttons [1].sincePressedMillisMod (buttonsTimeInterval)) {
            if (parameterType.equals ("Int")) {
              i_value -= i_decrement;
+             if (hasBotLimit)
+               if (i_value <= int (botLimit))
+                 i_value = int (botLimit);
            } else if (parameterType.equals ("Float")) {
              f_value -= f_decrement;
+             if (hasBotLimit)
+               if (f_value <= botLimit)
+                 f_value = botLimit;
            }
          }
        }
@@ -213,6 +241,10 @@
      if (buttons [0].pressed () || buttons [1].pressed ())
        ret = true;
      return ret;
+   }
+   
+   public float GetBotLimit () {
+     return botLimit;
    }
    
    public int GetButtonsAceleration () {
@@ -326,9 +358,30 @@
      return textSize;
    }
    
+   public float GetTopLimit () {
+     return topLimit;
+   }
+   
+   public boolean HasBotLimit () {
+     return hasBotLimit;
+   }
+   
+   public boolean HasTopLimit () {
+     return hasTopLimit;
+   }
    
    public UIButton [] GetUIButtons () {
      return buttons;
+   }
+   
+   public void SetBotLimit (int t) {
+     botLimit = float (t);
+     hasBotLimit = true;
+   }
+   
+   public void SetBotLimit (float t) {
+     botLimit = t;
+     hasBotLimit = true;
    }
    
    public void SetButtonsAceleration (int t) {
@@ -372,6 +425,14 @@
    public void SetFloatValue (float t) {
      f_value = t;
      if (parameterType.equals("Int")) i_value = int (f_value);
+   }
+   
+   public void SetHasBotLimit (boolean b) {
+     hasBotLimit = b;
+   }
+   
+   public void SetHasTopLimit (boolean b) {
+     hasTopLimit = b;
    }
    
    public void SetIntDecrement (int t) {
@@ -473,6 +534,18 @@
    
    public void SetTextSize (int ts) {
      textSize = ts;
+     buttons [0].SetTextSize (ts);
+     buttons [1].SetTextSize (ts);
+   }
+   
+   public void SetTopLimit (int t) {
+     topLimit = float (t);
+     hasTopLimit = true;
+   }
+   
+   public void SetTopLimit (float t) {
+     topLimit = t;
+     hasTopLimit = true;
    }
    
  }

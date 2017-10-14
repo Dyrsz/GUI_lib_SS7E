@@ -26,32 +26,48 @@
  // Test Sub/Super Layers.
  UILayer [] lay = new UILayer [5];
  int [][][] subSupers;
+ UIButton lol;
  
  void setup () {
    orientation (PORTRAIT);
    
    for (int i = 0; i < 5; i++) {
     lay [i] = new UILayer (100, 100 + 200*i, 800, 250 + 200*i);
-    lay [i].SetText ("Lay " + str (lay [i].GetUI_ID()));
+    //lay [i].SetText ("Lay " + str (lay [i].GetUI_ID()));
+    lay [i].SetText ("Lay " + str (lay [i].GetNumberLayer()));
    }
-  
-   UILayer [] lays = {lay [1], lay [3]};
+   
+   
+   UILayer [] lays = {lay [1], lay [3], lay [4]};
    lay [0].AddElements (lays);
-   lay [1].AddElement (lay [2]);
-   lay [0].ClearElements (true);
+   //lay [0].RemoveLastSubLayer ();
+   lay [3].AddElement (lay [2]);
+   lay [2].AddElement (lay [1]);
+   //lay [0].ClearSubLayers (true);
+   lay [1].ClearSuperLayers (true);
+   //lay [1].RemoveElement (lay [2]);
+   //lay [0].RemoveElement (0);
+   
+   
+   //lay [4].SetNumberLayer (1);
+   //lay [3].SetNumberLayer (2);
+   //lay [2].SetNumberLayer (3);
+   //lay [1].SetNumberLayer (4);
   
    subSupers = new int [5][2][5];
-   for (int i = 0; i < 5; i++)
+   for (int i = 0; i < 5; i++) {
+     lay [i].SetText ("Lay " + str (lay [i].GetNumberLayer()));
      for (int j = 0; j < 5; j++) {
        if (j < lay [i].GetNumberSubLayers()) subSupers [i][0][j] = lay [i].GetSubLayers ()[j].GetUI_ID ();
        if (j < lay [i].GetNumberSuperLayers()) subSupers [i][1][j] = lay [i].GetSuperLayers ()[j].GetUI_ID ();
      }
+   }
    
  }
  
  void draw () {
    background (0);
-  
+   
    for (int i = 0; i < 5; i++) {
      lay [i].display ();
    }
