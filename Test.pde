@@ -42,9 +42,10 @@
    lay [0].AddElements (lays);
    //lay [0].RemoveLastSubLayer ();
    lay [3].AddElement (lay [2]);
-   lay [2].AddElement (lay [1]);
+   //lay [1].Destroy ();
+   //lay [2].AddElement (lay [1]);
    //lay [0].ClearSubLayers (true);
-   lay [1].ClearSuperLayers (true);
+   //lay [1].ClearSuperLayers (true);
    //lay [1].RemoveElement (lay [2]);
    //lay [0].RemoveElement (0);
    

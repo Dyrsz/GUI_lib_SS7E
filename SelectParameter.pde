@@ -10,6 +10,8 @@
    private float f_value = 0.0;
    private float f_increment = 1.0;
    private float f_decrement = 1.0;
+   private int floatLeftDigits = 2;
+   private int floatRightDigits = 1;
    private boolean hasTopLimit;
    private float topLimit = 10;
    private boolean hasBotLimit;
@@ -100,7 +102,7 @@
      if (parameterType.equals ("Int")) {
        textLengthAux += int (textWidth (str (i_value)));
      } else if (parameterType.equals ("Float")) {
-       textLengthAux += int (textWidth (str (f_value)));
+         textLengthAux += int (textWidth (nf (f_value, floatLeftDigits, floatRightDigits)));
      } else {
        textLengthAux += int (textWidth (string_value));
      }
@@ -139,7 +141,6 @@
          buttons [0].SetText (">");
          buttons [1].SetText ("<");
        }
-       buttons [0].SetTextSize (50);
      }  
    }
    
@@ -151,7 +152,7 @@
        if (parameterType.equals ("Int")) {
          text (parameterName + ": " + str (i_value), coord_x1 + lengthX/2 + 3, coord_y1 + 3 + textSize);
        } else if (parameterType.equals ("Float")) {
-         text (parameterName + ": " + str (f_value), coord_x1 + lengthX/2 + 3, coord_y1 + 3 + textSize);
+         text (parameterName + ": " + nf (f_value, floatLeftDigits, floatRightDigits), coord_x1 + lengthX/2 + 3, coord_y1 + 3 + textSize);
       } else {
          text (parameterName + ": " + string_value, coord_x1 + lengthX/2 + 3, coord_y1 + 3 + textSize);
       }
@@ -162,7 +163,7 @@
        if (parameterType.equals ("Int")) {
          text (str(i_value), coord_x1 + 3 + textLengthAux, coord_y1 + (lengthY + textSize)/2 - 3);
        } else if (parameterType.equals ("Float")) {
-         text (str(f_value), coord_x1 + 3 + textLengthAux, coord_y1 + (lengthY + textSize)/2 - 3);
+         text (nf(f_value, floatLeftDigits, floatRightDigits), coord_x1 + 3 + textLengthAux, coord_y1 + (lengthY + textSize)/2 - 3);
        } else {
          text (string_value, coord_x1 + 3 + textLengthAux, coord_y1 + (lengthY + textSize)/2 - 3);
        }
@@ -281,6 +282,14 @@
    
    public float GetFloatIncrement () {
      return f_increment;
+   }
+   
+   public int GetFloatLeftDigits () {
+     return floatLeftDigits;
+   }
+   
+   public int GetFloatRightDigits () {
+     return floatRightDigits;
    }
    
    public float GetFloatValue () {
@@ -420,6 +429,22 @@
    public void SetFloatIncrement (float t) {
      f_increment = t;
      if (parameterType.equals("Int")) i_increment = int (f_increment);
+   }
+   
+   public void SetFloatLeftDigits (int t) {
+     if (t >= 0) {
+       floatLeftDigits = t;
+     } else {
+       println ("Bad input on SelectParameter.SetFloatLeftDigits ().");
+     }
+   }
+   
+   public void SetFloatRightDigits (int t) {
+     if (t >= 0) {
+       floatRightDigits = t;
+     } else {
+       println ("Bad input on SelectParameter.SetRightLeftDigits ().");
+     }
    }
    
    public void SetFloatValue (float t) {

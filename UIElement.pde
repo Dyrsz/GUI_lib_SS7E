@@ -1,6 +1,10 @@
 
  public class UIElement {
 
+   // I haver to make a IntList of superLayersIds:
+   // when I remove an element, erase it from
+   // layers.
+
    protected int x1 = 0;
    protected int x2 = 100;
    protected int y1 = 0;
@@ -15,7 +19,8 @@
    private String form = "Rect"; // Round, Ghost.
    private color colorBackground = 0;
    private boolean transparentBackground = false;
-   
+   private IntList superlayers = new IntList();
+   private int numberSuperLayers = 0;
    protected int id = 0;
    protected String UIType = "UIElement";
    
@@ -38,14 +43,64 @@
      MakeID ();
    }
    
+   // What with this? I think there are no changes.
+   protected void AddSuperLayer (UILayer lay) {
+     superlayers.append (lay.GetUI_ID ());
+     numberSuperLayers++;
+   }
+   
+   protected void AddSuperLayerFromID (int idt) {
+     if (idt > 0) {
+       superlayers.append (idt);
+       numberSuperLayers++;
+     } else {
+       println ("Crucial error on UIElement.AddSuperLayerFromID (0).");
+     }
+   }
+   
+   /*
+   protected void AddSuperLayer (UILayer lay, boolean addButton) {
+     superlayers.append (lay.GetUI_ID ());
+     numberSuperLayers++;
+   }
+   */
+   
    public void display () {
      drawBasics ();
    }
    
+   public void ClearSuperLayers () {
+     while (numberSuperLayers > 0)
+       GetSuperLayer (numberSuperLayers-1).ClearSubLayers ();
+   }
+   
+   public void ClearSuperLayers (boolean removeAllStructure) {
+     while (numberSuperLayers > 0) {
+       if (removeAllStructure) GetSuperLayer (numberSuperLayers-1).ClearSuperLayers (true);
+       GetSuperLayer (numberSuperLayers-1).ClearSubLayers ();
+     }
+   }
+   
    public void Destroy () {
-     if (id > 0) UI_IDRecolector.DestroyElementFromID_Intern (id);
+     if (id > 0) {
+       if (numberSuperLayers > 0) for (int i = 0; i < numberSuperLayers; i++) {
+         GetSuperLayer (i).RemoveElementFromID (id);
+       superlayers.clear ();
+       numberSuperLayers = 0;
+       UI_IDRecolector.DestroyElementFromID_Intern (id);
+     }
      id = 0;
-     hide = true;
+     SetHide (true);
+   }
+   
+   protected void DestroyFromLayer () {
+     if (id > 0) {
+       superlayers.clear ();
+       numberSuperLayers = 0;
+       UI_IDRecolector.DestroyElementFromID_Intern (id);
+     }
+     id = 0;
+     SetHide(true);
    }
    
    public void drawBasics () {
@@ -113,6 +168,21 @@
      return form;
    }
    
+   protected int getIndexOf (IntList ls, int val) {
+     int k = 0;
+     if (ls.hasValue (val)) {
+       int s = ls.size ();
+       for (int i = 0; i < s; i++)
+         if (ls.get (i) == val) {
+           k = i;
+           i = s;
+         }
+     } else {
+       println ("Intern error. Code A.");
+     }
+     return k;
+   }
+   
    public int GetLengthX () {
      return lengthX;
    }
@@ -121,9 +191,30 @@
      return lengthY;
    }
    
+   public int GetNumberSuperLayers () {
+     return numberSuperLayers;
+   }
+   
    public int [] GetPosition () {
      int [] r = {x1, x2, y1, y2};
      return r;
+   }
+   
+   public UILayer GetSuperLayer (int i) {
+     if (0 <= i && i < numberSuperLayers) {
+       return (UILayer) UI_IDRecolector.SearchUIByID (superlayers.get (i));
+     } else {
+       println ("Bad input on UILayer.GetSuperLayer (i).");
+       return null;
+     }
+   }
+   
+   public UILayer [] GetSuperLayers () {
+     UILayer [] ret = new UILayer [numberSuperLayers];
+     if (numberSuperLayers > 0)
+       for (int i = 0; i < numberSuperLayers; i++)
+         ret [i] = GetSuperLayer (i);
+     return ret;
    }
    
    public String GetText () {
@@ -153,6 +244,20 @@
    
    public boolean IsTransparentBackground () {
      return transparentBackground;
+   }
+   
+   protected void RemoveSuperLayer (UILayer lay) {
+     RemoveSuperLayerFromID (lay.GetUI_ID ());
+   }
+   
+   protected void RemoveSuperLayerFromID (int ID) {
+     if (superlayers.hasValue (ID)) {
+       int k = getIndexOf (superlayers, ID);
+       superlayers.remove (k);
+       numberSuperLayers--;
+     } else {
+       println ("Crucial error on UILayer.RemoveSuperLayer().");
+     }
    }
    
    public void SetColorBackground (color tcolor) {
