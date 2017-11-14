@@ -60,6 +60,31 @@
      }
    }
    
+   public void AutoWithNumberElements (int numberElements) {
+     if (numberElements < 1) 
+       println ("Bad input on PositionGuide.AutoWithNumberElements().");
+       // maxElements could be a variable. I put 256 (16*16);
+     } else if (numberElements > 256) {
+       println ("Bad input on PositionGuide.AutoWithNumberElements().");
+       println ("NumberElements can not exceed 256.");
+     } else {
+       SetOutputType ("Matrix");
+       SetDefaultMode ("UniformDistribution");
+       SetInputType ("Relative");
+       for (int n = 1; n <= 16; n++) {
+         if (numberElements == n*n) {
+           SetRowLength (n);
+           SetColumnLength (n);
+         } else if (numberElements < n*n) {
+           int m = max (n, numberElements/n);
+           SetRowLength (numberElements/m);
+           SetColumnLength (m);
+         }
+       }
+       Generate ();
+     }
+   }
+   
    public void Generate () {
      if (outputType.equals ("Row")) {
        if (defaultMode.equals ("UniformDistribution")) {
@@ -287,6 +312,88 @@
      return ret;
    }
    
+   public int [][] GetMatrixCoordOnArray () {
+     int [][] ret = new int [rowLength*columnLength][4];
+     if (matrixCoord == null) {
+       if (outputType.equals ("Column") || outputType.equals ("Row")) {
+         println ("Bad call on PositionGuide.GetMatrixCoordOnArray (). Output Type must be 'Matrix'.");
+       } else {
+         println ("Bad call on PositionGuide.GetMatrixCoordOnArray (). Use PositionGuide.Generate () first.");
+       }
+     } else {
+       for (int i = 0; i < rowLength*columnLength; i++)
+         ret [i] = GetMatrixCoordOnArray (i);
+       }
+     }
+     return ret;
+   }
+   
+   public int [][] GetMatrixCoordOnArray (boolean transpose) {
+     int [][] ret = new int [rowLength*columnLength][4];
+     if (matrixCoord == null) {
+       if (outputType.equals ("Column") || outputType.equals ("Row")) {
+         println ("Bad call on PositionGuide.GetMatrixCoordOnArray (). Output Type must be 'Matrix'.");
+       } else {
+         println ("Bad call on PositionGuide.GetMatrixCoordOnArray (). Use PositionGuide.Generate () first.");
+       }
+     } else {
+       for (int i = 0; i < rowLength*columnLength; i++)
+         ret [i] = GetMatrixCoordOnArray (i, transpose);
+       }
+     }
+     return ret;
+   }
+   
+   public int [][] GetMatrixCoordOnArray () {
+     int [][] ret = new int [rowLength*columnLength][4];
+     if (matrixCoord == null) {
+       if (outputType.equals ("Column") || outputType.equals ("Row")) {
+         println ("Bad call on PositionGuide.GetMatrixCoordOnArray (). Output Type must be 'Matrix'.");
+       } else {
+         println ("Bad call on PositionGuide.GetMatrixCoordOnArray (). Use PositionGuide.Generate () first.");
+       }
+     } else {
+       for (int i = 0; i < rowLength*columnLength; i++) {
+         for (int j = 0; j < 4; j++) {
+           ret [i][j] = GetMatrixCoordOnArray (i, j);
+         }
+       }
+     }
+     return ret;
+   }
+   
+   public int [] GetMatrixCoordOnArray (int ind) {
+     GetMatrixCoordOnArray (ind, false);
+   }
+   
+   // Test this.
+   public int [] GetMatrixCoordOnArray (int ind, boolean transpose) {
+     int [] ret = new int [4];
+     int row, column;
+     // Better do it directly, without using GetMatrixCoord ().
+     if (matrixCoord == null) {
+       if (outputType.equals ("Column") || outputType.equals ("Row")) {
+         println ("Bad call on PositionGuide.GetMatrixCoordOnArray (). Output Type must be 'Matrix'.");
+       } else {
+         println ("Bad call on PositionGuide.GetMatrixCoordOnArray (). Use PositionGuide.Generate () first.");
+       }
+     } else {
+       if (0 <= ind && ind < rowLength*columnLength) {
+         if (!transpose) {
+           row = ind/rowLength;
+           column = ind % rowLength;
+         } else {
+           row = ind % columnLength;
+           column = ind/columnLength;
+         }
+         for (int i = 0; i < 4; i++)
+           ret [i] = matrixCoord [row][column][i];
+       } else {
+         println ("Bad i-ndex on PositionGuide.GetMatrixCoordOnArray (i).");
+       }
+     }
+   }
+   
    public String GetOutputType () {
      return outputType;
    }
@@ -363,10 +470,6 @@
      return rightOffset;
    }
    
-   public int GetRowLength () {
-     return rowLength;
-   }
-   
    public int [][] GetRowCoord () {
      if (rowCoord == null) {
        if (outputType.equals ("Column") || outputType.equals ("Matrix")) {
@@ -398,6 +501,10 @@
        }
      }
      return ret;
+   }
+   
+   public int GetRowLength () {
+     return rowLength;
    }
    
    public float GetScreenRelativeDistanceX () {

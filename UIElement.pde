@@ -1,10 +1,6 @@
 
  public class UIElement {
 
-   // I haver to make a IntList of superLayersIds:
-   // when I remove an element, erase it from
-   // layers.
-
    protected int x1 = 0;
    protected int x2 = 100;
    protected int y1 = 0;
@@ -23,6 +19,8 @@
    private int numberSuperLayers = 0;
    protected int id = 0;
    protected String UIType = "UIElement";
+   // Auxiliars.
+   private boolean _firstFrameDisplaySeg, _firstFrameHideSeg;
    
    public UIElement () {
      MakeID ();
@@ -83,7 +81,7 @@
    
    public void Destroy () {
      if (id > 0) {
-       if (numberSuperLayers > 0) for (int i = 0; i < numberSuperLayers; i++) {
+       if (numberSuperLayers > 0) for (int i = 0; i < numberSuperLayers; i++)
          GetSuperLayer (i).RemoveElementFromID (id);
        superlayers.clear ();
        numberSuperLayers = 0;
@@ -105,6 +103,11 @@
    
    public void drawBasics () {
      if (!hide) {
+       if (!_firstFrameDisplaySeg) {
+         _firstFrameDisplaySeg = true;
+         _firstFrameHideSeg = false;
+         OnFirstFrameDisplay ();
+       }
        stroke (180);
        if (!transparentBackground) {
          fill(colorBackground);
@@ -122,11 +125,22 @@
          text (text, textx, texty);
          textAlign (LEFT);
        }
+     } else {
+       if (!_firstFrameHideSeg) {
+         _firstFrameHideSeg = true;
+         _firstFrameDisplaySeg = false;
+         OnFirstFrameHide ();
+       }
      }
    }
    
    public void drawBasics (color c) {
      if (!hide) {
+       if (!_firstFrameDisplaySeg) {
+         _firstFrameDisplaySeg = true;
+         _firstFrameHideSeg = false;
+         OnFirstFrameDisplay ();
+       }
        stroke (180);
        if (!transparentBackground) {
          fill(c);
@@ -143,6 +157,12 @@
          fill (200);
          text (text, textx, texty);
          textAlign (LEFT);
+       }
+     } else {
+       if (!_firstFrameHideSeg) {
+         _firstFrameHideSeg = true;
+         _firstFrameDisplaySeg = false;
+         OnFirstFrameHide ();
        }
      }
    }
@@ -245,6 +265,10 @@
    public boolean IsTransparentBackground () {
      return transparentBackground;
    }
+   
+   public void OnFirstFrameDisplay () {};
+   
+   public void OnFirstFrameHide () {};
    
    protected void RemoveSuperLayer (UILayer lay) {
      RemoveSuperLayerFromID (lay.GetUI_ID ());

@@ -1,12 +1,6 @@
 
  class UILayer extends UIElement {
    
-   // Parameter adding sublayers: create aditional button.
-   // I am reviewing all the methods to fix it.
-   
-   // Function (onConstructor) that: ActualizeProperties.
-   // Always: SetTextYPosition
-   // Detect submenu level (and set it) and change colorBackground.
    // UIText, UIForm lists.
    
    // Parameters
@@ -16,29 +10,19 @@
    private boolean isSpecialLayer = false;
    private boolean active = true;
    private boolean hideable = false;
-   // getters, setters.
-   private boolean showingTitle = false;
-   
+   private boolean transpose = false;
    private IntList elements = new IntList ();
    private int numberElements = 0;
    private IntList sublayers = new IntList ();
    private int numberSubLayers = 0;
-   
-   // Destroy this variable. Ill use sublayerButtons as ID, 0 if no button.
-   // Repase all methods again.
-   //private ArrayList<Boolean> hasSublayerButton = new ArrayList<Boolean> ();
    private IntList sublayerButtons = new IntList ();
-   // this is not necessary, I think. Maybe yes.
-   private IntList superlayerButtons;
-   
-   
-   private int submenuLevel = 0;
-   // Auxiliars
-   private boolean _pressedOutRet, _onFirstFramePressedOutRet;
-   private boolean _firstFramePressedOutSeg;
+   private boolean fixElementsPosition = true;
+   private PositionGuide pg;
+   private int subLayerLevel = 1;
+   private boolean autoColor = true;
    
    // Sobreescribo isHide, isActive y el resto de métodos necesarios.
-   // Afectan a la capa pero también a todos sus elementos, y subcapas y elementos de subcapas.
+   // Afectan a la capa pero también a todos sus elementos, y subcapas.
    
    public UILayer () {
      super ();
@@ -90,23 +74,61 @@
      UIType = "UILayer";
    }
    
-   // Maybe this is not necessary.
-   public void ActualizeProperties () {
-     if (numberElements > 0) {
-       submenuLevel = 0;
-       for (int i = 0; i < numberElements; i++) {
-         if (GetElement (i).GetUIType ().equals ("UILayer")) {
-           //if (element.get (i).)
-         }
-       }
+   public void ActualizeProperties (boolean fixElements) {
+     // subLayerLevel
+     if (autoColor)
+       // change colorBackground.
+     if (fixElements && numberElements > 0) {
+       pg = new PositionGuide ("Matrix", "Relative");
+       pg.SetOffSet (x1, Relative._width - x2, y1, Relative._height -y2);
+       pg.AutoWithNumberElements (numberElements);
+       for (int i = 0; i < numberElements; i++)
+         GetElement (i).SetPosition (pg.GetMatrixCoordOnArray (i, transpose));
+     }
+     if (!hideName) {
+       SetTextYPosition (y1 + textSize + 10);
+   }
+   
+   public void AddButtonToSubLayer (UILayer lay) {
+     if (sublayers.hasValue (lay.GetUI_ID ())) {
+       AddButtonToSubLayerFromID (lay.GetUI_ID ());
+     } else {
+       println ("Bad input on UILayer.AddButtonToSubLayer");
      }
    }
    
-   public void AddButtonToSubLayer () {
-     
+   public void AddButtonToSubLayer (int index) {
+     if (index >= 0 && index < numberSubLayers) {
+       if (sublayerButtons.get (index) == 0) {
+         UIButton but = new UIButton ();
+         if (text.equals ("")) {
+           but.SetText ("Next sublayer");
+         } else {
+           but.SetText (text);
+         }
+         GetSubLayer (index).SetHide (true);
+         int k = getIndexOf (elements, sublayers.get (index));
+         elements.remove (k);
+         elements.append (but.GetUI_ID ());
+         sublayerButtons.remove (index);
+         sublayerButtons.add (index, but.GetUI_ID ());
+         but.AddSuperLayerFromID (id);
+       } else {
+         println ("You are adding a button to a sublayer that already have it.");
+       }
+     } else {
+       println ("Bad call on UILayer.AddButtonTuSubLayer ();");
+     }
    }
    
-   // Ok.
+   public void AddButtonToSubLayerFromID (int ID) {
+     if (ID > 0 && sublayers.hasValue (ID)) {
+       AddButtonToSubLayer (getIndexOf (sublayers, ID));
+     } else {
+       println ("Invalid ID on UILayer.AddButtonToSubLayerFromID ().");
+     }
+   }
+   
    public void AddElement (UIElement elem) {
      if (elem.GetUIType ().equals ("UILayer")) {
        AddSubLayerFromElem (elem);
@@ -117,7 +139,6 @@
      }
    }
    
-   // Ok.
    public void AddElement (UIElement elem, boolean addButton) {
      if (elem.GetUIType ().equals ("UILayer")) {
        AddSubLayerFromElem (elem, addButton);
@@ -128,121 +149,106 @@
      }
    }
    
-   // Ok.
    public void AddElements (UIElement [] elems) {
      int siz = elems.length;
      for (int i = 0; i < siz; i++)
        AddElement (elems [i]);
    }
    
-   // Ok.
+   public void AddElements (UIElement [] elems, boolean addButton) {
+     int siz = elems.length;
+     for (int i = 0; i < siz; i++)
+       AddElement (elems [i], addButton);
+   }
+   
    public void AddSubLayer (UILayer lay) {
      AddSubLayerFromID (lay.GetUI_ID ());
    }
    
-   // Ok.
    public void AddSubLayer (UILayer lay, boolean addButton) {
      AddSubLayerFromID (lay.GetUI_ID (), addButton);
    }
    
-   // Ok.
    protected void AddSubLayerFromElem (UIElement elem) {
      UILayer lay = (UILayer) elem;
      AddSubLayer (lay);
    }
    
-   // Ok.
    protected void AddSubLayerFromElem (UIElement elem, boolean addButton) {
      UILayer lay = (UILayer) elem;
      AddSubLayer (lay, addButton);
    }
    
-   // Ok.
    public void AddSubLayerFromID (int ID) {
-     elements.append (ID);
-     numberElements++;
-     sublayers.append (ID); 
-     sublayerButtons.append (0);
-     numberSubLayers++;
-     GetSubLayer (numberSubLayers-1).AddSuperLayerFromID (id);
-   }
-   
-   // Ok.
-   public void AddSubLayerFromID (int ID, boolean addButton) {
-     sublayers.append (ID);
-     if (addButton) {
-       UIButton but = new UIButton ();
-       if (text.equals ("")) {
-         but.SetText ("Next sublayer");
-       } else {
-         but.SetText (text);
-       }
-       lay.SetHide (true);
-       elements.append (but.GetUI_ID ());
-       sublayerButtons.append (but.GetUI_ID ());
-       but.AddSuperLayerFromID (id);
-       numberSubLayers++;
-       GetSubLayer (numberSubLayers-1).AddSuperLayerFromID (id);
-       GetSubLayer (numberSubLayers-1).SetHide (true);
-     } else {
-       sublayerButtons.append (0);
+     if (ID > 0) {
        elements.append (ID);
+       numberElements++;
+       sublayers.append (ID); 
+       sublayerButtons.append (0);
        numberSubLayers++;
        GetSubLayer (numberSubLayers-1).AddSuperLayerFromID (id);
+     } else {
+       println ("Invalid ID on UILayer.AddSubLayerFromID ().");
      }
-     numberElements++;
    }
    
-   // Ok.
+   public void AddSubLayerFromID (int ID, boolean addButton) {
+     if (ID > 0) {
+       sublayers.append (ID);
+       if (addButton) {
+         UIButton but = new UIButton ();
+         if (text.equals ("")) {
+           but.SetText ("Next sublayer");
+         } else {
+           but.SetText (text);
+         }
+         elements.append (but.GetUI_ID ());
+         sublayerButtons.append (but.GetUI_ID ());
+         but.AddSuperLayerFromID (id);
+         numberSubLayers++;
+         GetSubLayer (numberSubLayers-1).AddSuperLayerFromID (id);
+         GetSubLayer (numberSubLayers-1).SetHide (true);
+       } else {
+         sublayerButtons.append (0);
+         elements.append (ID);
+         numberSubLayers++;
+         GetSubLayer (numberSubLayers-1).AddSuperLayerFromID (id);
+       }
+       numberElements++;
+     } else {
+       println ("Invalid ID on UILayer.AddSubLayerFromID ().");
+     }
+   }
+   
    public void AddSubLayers (UILayer [] lays) {
      int siz = lays.length;
      for (int i = 0; i < siz; i++)
        AddSubLayerFromID (lays [i].GetUI_ID ());
    }
    
-   // Ok.
    public void AddSubLayers (UILayer [] lays, boolean addButton) {
      int siz = lays.length;
      for (int i = 0; i < siz; i++)
        AddSubLayerFromID (lays [i].GetUI_ID (), addButton);
    }
    
-   // Repasar. Ya puedo.
    public void ClearElements () {
-     if (numberElements > 0)
-       for (int = 0; i < numberElements; i++)
-         RemoveElementFromId (elements.get (i));
-     elements.clear ();
-     numberElements = 0;
-     if (numberSubLayers > 0) {
-       for (int i = 0; i < numberSubLayers; i++)
-         GetSubLayer (i).RemoveSuperLayer (this);
-       sublayers.clear ();
-       numberSubLayers = 0;
-     }
+     ClearSubLayers ();
+     while (numberElements > 0)
+       RemoveElementFromID (elements.get (numberElements-1));
    }
    
-   // Repasar.
    public void ClearElements (boolean removeAllStructure) {
-     elements.clear ();
-     numberElements = 0;
-     if (numberSubLayers > 0) {
-       for (int i = 0; i < numberSubLayers; i++) {
-         if (removeAllStructure) GetSubLayer (i).ClearElements (true);
-         GetSubLayer (i).RemoveSuperLayer (this);
-       }
-       sublayers.clear ();
-       numberSubLayers = 0;
-     }
+     ClearSubLayers (removeAllStructure);
+     while (numberElements > 0)
+       RemoveElementFromID (elements.get (numberElements-1));
    }
    
-   // Ok.
    public void ClearSubLayers () {
      while (numberSubLayers > 0)
        RemoveLastSubLayer ();
    }
    
-   // Ok.
    public void ClearSubLayers (boolean removeAllStructure) {
      while (numberSubLayers > 0) {
        if (removeAllStructure) GetSubLayer (numberSubLayers-1).ClearSubLayers (true);
@@ -250,62 +256,116 @@
      }
    }
    
-  // Ok.
    protected void MakeLayer () {
      numberLayer = UI_IDRecolector.SetUI_NumberLayer (this);
    }
    
-   // Ok.
    protected void MakeSpecialLayer () {
      numberLayer = UI_IDRecolector.SetUI_NumberSpecialLayer (this);
    }
    
-   // Ok.
    protected void MakeSubmenuLevel (int t) {
      submenuLevel = t;
      ActualizeProperties ();
    }
    
-   // Not sure, but yes.
    public void Destroy () {
+     ClearElements ();
      UI_IDRecolector.DestroyLayerFromID_Intern (id);
      super.Destroy ();
-     ClearElements ();
    }
    
    // Test this.
    public void Destroy (boolean allElements) {
      if (allElements) {
-       if (numberElements > 0) for (int i = 0; i < numberElements; i++)
-         GetElement (i).Destroy ();
-       if (numberSubLayers > 0) for (int i = 0; i < numberSubLayers; i++)
-         GetSubLayer (i).Destroy ();
-       UI_IDRecolector.DestroyLayerFromID_Intern (id);
-       super.Destroy ();
-     } else {
-       Destroy ();
+       while (numberSubLayers > 0)
+         GetSubLayer (numberSubLayers-1).Destroy (true);
+       DestroyElements ();
+       DestroySubLayers ();
      }
+     Destroy ();
+   }
+   
+   public void DestroyElement (int index) {
+     if (index >= 0 && numberElements > 0 && index < numberElements) {
+       GetElement (index).Destroy ();
+     } else {
+       println ("Bad input on UILayer.DestroyElement ().");
+     }
+   }
+   
+   public void DestroyElements () {
+     while (numberElements > 0)
+       DestroyLastElement ();
+   }
+   
+   public void DestroyLastElement () {
+     if (numberElements > 0) {
+       GetElement (numberElements-1).Destroy ();
+     } else {
+       println ("Bad call on UILayer.DestroyLastElement (). Empty list.");
+     }
+   }
+   
+   public void DestroyLastSubLayer () {
+     if (numberSubLayers > 0) {
+       GetSubLayer (numberSubLayers-1).Destroy ();
+     } else {
+       println ("Bad call on UILayer.DestroyLastSubLayer (). Empty list.");
+     }
+   }
+   
+   public void DestroySubLayer (int index) {
+     if (index >= 0 && numberSubLayers > 0 && index < numberSubLayers) {
+       GetSubLayer (index).Destroy ();
+     } else {
+       println ("Bad input on UILayer.DestroySubLayer ().");
+     }
+   }
+   
+   public void DestroySubLayer (int index, boolean allElements) {
+     if (index >= 0 && numberSubLayers > 0 && index < numberSubLayers) {
+       if (allElements) {
+         GetSubLayer (index).Destroy (true);
+       } else {
+         GetSubLayer (index).Destroy ();
+       }
+     } else {
+       println ("Bad input on UILayer.DestroySubLayer ().");
+     }
+   }
+   
+   public void DestroySubLayers () {
+     while (numberSubLayers > 0)
+       DestroyLastSubLayer ();
+   }
+   
+   // Test.
+   public void DestroySubLayers (boolean allElements) {
+     while (numberSubLayers > 0)
+       if (allElements) {
+         GetSubLayer (numberSubLayers-1).DestroySubLayers (true);
+         DestroyLastSubLayer ();
+       } else {
+         DestroyLastSubLayer ();
+       }
    }
    
    public void display () {
+     // if (hideName...
+     // drawText
+     drawBasics ();
+     if (numberElements > 0) 
+       for (int i = 0; i < numberElements; i++)
+         GetElement (i).display ();
      if (!hide) {
-       // if (hideName...
-       drawBasics ();
-       if (numberElements > 0) 
-         for (int i = 0; i < numberElements; i++)
-           GetElement (i).display ();
-       // onFirstFrameDisplay:
-       //  - coloco botones y botones de subcapas.
-       //  - si estaban hides: hide = false.
        if (hideable) if (onFirstFramePressedOut ())
          SetHide (true);
-       // en el cuerpo:
-       // acciones de onfirstFramePressed en los botones de subcapas.
-         
+     // acciones de onfirstFramePressed en los botones de subcapas.
+       }
      }
    }
    
-   // Ok.
    public UIElement GetElement (int i) {
      if (0 <= i && i < numberElements) {
        return UI_IDRecolector.SearchUIByID (elements.get (i));
@@ -315,7 +375,6 @@
      }
    }
    
-   // Ok.
    public UIElement [] GetElements () {
      UIElement [] ret = new UIElement [numberElements];
      for (int i = 0; i < numberElements; i++)
@@ -333,6 +392,10 @@
    
    public int GetNumberSubLayers () {
      return numberSubLayers;
+   }
+   
+   public PositionGuide GetPositionGuide () {
+     return pg;
    }
    
    public UILayer GetSubLayer (int i) {
@@ -357,9 +420,8 @@
        if (sublayerButtons.get (i) == 0) { 
          println ("Bad input on UILayer.GetSubLayerButton (). No button on this index.");
          return null;
-         // If isn't permited, return new button.
        } else {
-         return (UIButton) UI_IDRecolector.SearchUIByID (sublayersButtons.get (i));
+         return (UIButton) UI_IDRecolector.SearchUIByID (sublayerButtons.get (i));
        }
      } else {
        println ("Bad input on UILayer.GetSubLayerButton (i).");
@@ -378,18 +440,29 @@
        k = 0;
        for (int i = 0; i < numberSubLayers; i++)
        if (sublayerButtons.get (i) != 0) {
-         ret [k] = UI_IDRecolector.SearchUIByID (sublayersButtons.get (i));
+         ret [k] = (UIButton) UI_IDRecolector.SearchUIByID (sublayerButtons.get (i));
          k++;
        }
        return ret;
      } else {
-       UIButton [] noButtons;
-       return noButtons;
+       return null;
      }
    }
    
    public int GetSubmenuLevel () {
      return submenuLevel;
+   }
+   
+   public boolean HasAutoColor () {
+     return autoColor;
+   }
+   
+   public boolean HasFixElementsPosition () {
+     return fixElementsPosition;
+   }
+   
+   public boolean HasHideName () {
+     return hideName;
    }
    
    public boolean IsActive () {
@@ -400,48 +473,60 @@
      return hideable;
    }
    
-   public boolean IsHideName () {
-     return hideName;
-   }
-   
    public boolean IsSpecialLayer () {
      return isSpecialLayer;
    }
    
-   // onFirtsFrameDisplay (); onFirstFrameHide ();
-   // In these methods, create PositionGuide.
-   // Before, subMenuLevel.
+   public boolean IsTranspose () {
+     return transpose;
+   }
    
-   public boolean onFirstFramePressedOut () {
-     _onFirstFramePressedOutRet = false;
-     if (active) {
-       if (pressedOut ()) {
-         if (!_firstFramePressedOutSeg) {
-           _firstFramePressedOutSeg = true;
-           _onFirstFramePressedOutRet = true;
-         }
-       } else {
-         _firstFramePressedOutSeg = false;
-       }
+   // onFirstFrameHide ();
+   
+   public void onFirstFrameDisplay () {
+     ActualizeProperties (fixElementsPosition);
+     for (int i = 0; i < numberElements; i++) {
+       GetElement (i).SetHide (false);
      }
-     return _onFirstFramePressedOutRet;
    }
    
-   public boolean pressedOut () {
-     _pressedOutRet = false;
-     if (active)
-       if (mousePressed)
-         if (x1 > mouseX || mouseX > x2)
-           if (y1 > mouseY || mouseY > y2)
-             _pressedOutRet = true;
-     return _pressedOutRet;
+   public void RemoveButtonToSubLayer (UILayer lay) {
+     if (sublayers.hasValue (lay.GetUI_ID ())) {
+       RemoveButtonToSubLayerFromID (lay.GetUI_ID ());
+     } else {
+       println ("Bad input on UILayer.RemoveButtonToSubLayer().");
+     }
    }
    
-   public void RemoveButtonToSubLayer () {
-     
+   public void RemoveButtonToSubLayer (int index) {
+     if (0 <= index && index < numberSubLayers && numberSubLayers > 0) {
+       RemoveButtonToSubLayerFromID (sublayers.get (index));
+     } else {
+       println  ("Bad input on UILayer.RemoveButtonToSubLayer().");
+     }
    }
    
-   // Ok.
+   public void RemoveButtonToSubLayerFromID (int ID) {
+     if (ID > 0 && sublayers.hasValue(ID)) {
+       int k = getIndexOf (sublayers, ID);
+       int idButton = sublayerButtons.get(k);
+       if (idButton != 0) {
+         int m = getIndexOf (elements, sublayerButtons.get (k));
+         elements.remove (m);
+         elements.append (ID);
+         sublayerButtons.remove (k);
+         sublayerButtons.add (k, 0);
+         UI_IDRecolector.SearchUIByID (idButton).Destroy ();
+         GetSubLayer (k).SetHide (false);
+       } else {
+         println ("Bad input on UILayer.RemoveButtonToSubLayerFromID ().");
+         println ("Button you are trying to remove does not exist.");
+       }
+     } else {
+       println ("Bad input on UILayer.RemoveButtonToSubLayerFromID ().");
+     }
+   }
+   
    public void RemoveElement (int index) {
      if (0 <= index && index < numberElements && numberElements > 0) {
        RemoveElementFromID (GetElement (index).GetUI_ID ());
@@ -450,42 +535,44 @@
      }
    }
    
-   // Ok.
    public void RemoveElement (UIElement elem) {
      if (elements.hasValue (elem.GetUI_ID ())) {
-       RemoveElementsFromID (elem.GetUI_ID ());
+       RemoveElementFromID (elem.GetUI_ID ());
      } else {
        println ("Bad input on UILayer.RemoveElement (UIElement).");
      }
    }
    
-   // Ok.
    public void RemoveElementFromID (int ID) {
-     if (sublayers.hasValue(ID)) {
-       RemoveSubLayerFromID (ID);
-     } else {
-       if (sublayerButtons.hasValue (ID)) {
-         int k = getIndexOf (sublayerButtons, ID);
-         int m = getIndexOf (elements, ID);
-         GetSubLayer (k).RemoveSuperLayerFromID (id);
-         GetSubLayerButton (k).RemoverSuperLayerFromID (id);
-         sublayers.remove (k);
-         sublayerButtons.remove (k);
-         numberSubLayers--;
-         elements.remove (m);
-         numberElements--;
-       } else if (elements.hasValue (ID)) {
-         int k = getIndexOf (elements, ID);
-         elements.get (k).RemoveSuperLayerFromID (id);
-         elements.remove (k);
-         numberElements--;
+     if (ID > 0) {
+       if (sublayers.hasValue(ID)) {
+         RemoveSubLayerFromID (ID);
        } else {
-         println ("Bad input on UILayer.RemoveElementFromID ().");
+         if (sublayerButtons.hasValue (ID)) {
+           int k = getIndexOf (sublayerButtons, ID);
+           int m = getIndexOf (elements, ID);
+           GetSubLayer (k).RemoveSuperLayerFromID (id);
+           GetSubLayerButton (k).RemoveSuperLayerFromID (id);
+           sublayers.remove (k);
+           sublayerButtons.remove (k);
+           numberSubLayers--;
+           elements.remove (m);
+           numberElements--;
+         } else if (elements.hasValue (ID)) {
+           int k = getIndexOf (elements, ID);
+           GetElement (k).RemoveSuperLayerFromID (id);
+           elements.remove (k);
+           numberElements--;
+         } else {
+           println ("Bad input on UILayer.RemoveElementFromID ().");
+         }
        }
+     } else {
+       println ("Invalid ID on UILayer.RemoveElementFromID ().");
+     
      }
    }
    
-   // Ok.
    public void RemoveLastElement () {
      if (numberElements > 0) {
        RemoveElementFromID (GetElement (numberElements-1).GetUI_ID ());
@@ -494,7 +581,6 @@
      }
    }
    
-   // Ok.
    public void RemoveLastSubLayer () {
      if (numberElements > 0 && numberSubLayers > 0) {
        RemoveSubLayerFromID (GetSubLayer (numberSubLayers-1).GetUI_ID ());
@@ -503,7 +589,6 @@
      }
    }
    
-   // Ok.
    public void RemoveSubLayer (UILayer lay) {
      if (sublayers.hasValue (lay.GetUI_ID ())) {
        RemoveSubLayerFromID (lay.GetUI_ID ());
@@ -513,27 +598,50 @@
      }
    }
    
-   // Ok.
    public void RemoveSubLayerFromID (int ID) {
-     if (sublayers.hasValue (ID)) {
-       int k = getIndexOf (sublayers, ID);
-       if (sublayerButtons.get (k) != 0) {
-         GetSubLayerButton (k).Destroy ();
+     if (ID > 0) {
+       if (sublayers.hasValue (ID)) {
+         int k = getIndexOf (sublayers, ID);
+         if (sublayerButtons.get (k) != 0) {
+           GetSubLayerButton (k).Destroy ();
+         } else {
+           int m = getIndexOf (elements, ID);
+           GetSubLayer (k).RemoveSuperLayerFromID (id);
+           sublayers.remove (k);
+           numberSubLayers--;
+           elements.remove (m);
+           numberElements--;
+         }
        } else {
-         int m = getIndexOf (elements, ID);
-         GetSubLayer (k).RemoveSuperLayerFromID (id);
-         sublayers.remove (k);
-         numberSubLayers--;
-         elements.remove (m);
-         numberElements--;
+         println ("Bad input on UILayer.RemoveSubLayerFromID ().");
        }
      } else {
-       println ("Bad input on UILayer.RemoveSubLayerFromID ().");
+       println ("Invalid ID on UILayer.RemoveSubLayerFromID ().");
      }
    }
    
    public void SetActive (boolean sActive) {
      active = sActive;
+   }
+   
+   public void SetAutoColor (boolean b) {
+     autoColor = b;
+   }
+   
+   public void SetElementsPositionByPositionGuide (PositionGuide tpg) {
+     if (tpg.GetRowLength()*tpg.GetColumnLength >= numberElements && !fixElementsPosition) {
+       pg = tpg;
+     } else if (fixElementsPosition) {
+       println ("Bad call on UILayer.SetElementsPositionByPositionGuide ().");
+       println ("UILayer.fixElementsPosition is true. Change this with UILayer.SetFixElementsPosition ().");
+     } else {
+       println ("Bad call on UILayer.SetElementsPositionByPositionGuide ().");
+       println ("PositionGuide you are adding is not big enough.");
+     }
+   }
+   
+   public void SetFixElementsPosition (boolean b) {
+     fixElementsPosition = b;
    }
    
    public void SetHide (boolean sHide) {
@@ -578,6 +686,11 @@
    
    protected void SetProtectedNumberLayer (int i) { // Do NOT use this method manually.
      numberLayer = i;
+   }
+   
+   public void Transpose () {
+     transpose = !transpose;
+     if (fixElementsPosition) ActualizeProperties (true);
    }
    
  }

@@ -8,7 +8,6 @@
    - Tecla back en el teclado.
    - Vibración en el teclado.
    - Checkboxs.
-   - Menús.
    
    - Animaciones.
    
@@ -39,7 +38,7 @@
    
    
    UILayer [] lays = {lay [1], lay [3], lay [4]};
-   lay [0].AddElements (lays);
+   lay [0].AddSubLayers (lays, true);
    //lay [0].RemoveLastSubLayer ();
    lay [3].AddElement (lay [2]);
    //lay [1].Destroy ();

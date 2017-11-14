@@ -10,6 +10,8 @@
    private int _onMillisSincePressedSeg, _onMillisSinceOnSeg;
    private boolean _onRet, _onFirstFrameOnRet, _onFirstFramePressedRet;
    private boolean _onMillisSinceOnRet, _onMillisSincePressedRet, _pressedRet;
+   private boolean _pressedOutRet, _onFirstFramePressedOutRet;
+   private boolean _firstFramePressedOutSeg;
   
    public UIClickable () {
      super ();
@@ -87,6 +89,21 @@
      return _onFirstFramePressedRet;
    }
    
+   public boolean onFirstFramePressedOut () {
+     _onFirstFramePressedOutRet = false;
+     if (active) {
+       if (pressedOut ()) {
+         if (!_firstFramePressedOutSeg) {
+           _firstFramePressedOutSeg = true;
+           _onFirstFramePressedOutRet = true;
+         }
+       } else {
+         _firstFramePressedOutSeg = false;
+       }
+     }
+     return _onFirstFramePressedOutRet;
+   }
+   
    public boolean onMillisSinceOn (int tmillis) {
      _onMillisSinceOnRet = false;
      if (onFirstFrameOn()) _onMillisSinceOnSeg = millis ();
@@ -117,6 +134,16 @@
            if (y1 < mouseY && mouseY < y2)
              _pressedRet = true;
      return _pressedRet;
+   }
+   
+   public boolean pressedOut () {
+     _pressedOutRet = false;
+     if (active)
+       if (mousePressed)
+         if (x1 > mouseX || mouseX > x2)
+           if (y1 > mouseY || mouseY > y2)
+             _pressedOutRet = true;
+     return _pressedOutRet;
    }
    
    public void SetActive (boolean sActive) {
